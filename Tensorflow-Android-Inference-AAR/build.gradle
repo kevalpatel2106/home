@@ -1,3 +1,0 @@
-//https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/android
-configurations.maybeCreate("default")
-artifacts.add("default", file('Tensorflow-Android-Inference-alpha-debug.aar'))
