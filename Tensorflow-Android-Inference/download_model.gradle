@@ -34,6 +34,10 @@ task downloadFile(type: Download) {
     for (f in models) {
         src "${MODEL_URL}/" + f
     }
+
+    File downloadDir = new File(TMP_DIR)
+    downloadDir.mkdirs()
+
     dest new File(TMP_DIR)
     overwrite true
 }
