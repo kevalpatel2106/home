@@ -1,1 +1,1 @@
-include ':app', ':things', ':Tensorflow-Android-Inference'
+include ':app', ':things', ':Tensorflow-Android-Inference', ':vision'
