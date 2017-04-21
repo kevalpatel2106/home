@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'de.undercouch.download'
 
 repositories {
     mavenCentral()
@@ -66,6 +65,8 @@ android {
 //    }
 //}
 //
+
+apply from: 'download_model.gradle'
 
 dependencies {
     compile files('libs/libandroid_tensorflow_inference_java.jar')
