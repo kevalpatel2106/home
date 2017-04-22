@@ -30,44 +30,9 @@ android {
         }
     }
 }
-//
-//// Download model zip file into ../../assets directory
-//// unzip it to demo project's own ./assets directory
-//
-//import de.undercouch.gradle.tasks.download.Download
-//task downloadFile(type: Download) {
-//    src 'https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip'
-//    dest projectDir.toString() + '/assets/inception.zip'
-//}
-//task unzip(type: Copy) {
-//    from zipTree(projectDir.toString() + '/assets/inception.zip')
-//    into file(projectDir.toString() + '/assets')
-//}
-//unzip.dependsOn downloadFile
-//
-//project.afterEvaluate {
-//    if (!(new File(projectDir.toString() + '/assets')).exists()) {
-//        preBuild.dependsOn unzip
-//    }
-//}
-//
-//tasks.whenTaskAdded { task ->
-//    if (task.name == 'bundleDebug') {
-//        task.dependsOn 'downloadFile'
-//    }
-//    if (task.name == 'bundleRelease') {
-//        task.dependsOn 'downloadFile'
-//    }
-//}
-//repositories {
-//    flatDir {
-//        dirs 'libs'
-//    }
-//}
-//
-
-apply from: 'download_model.gradle'
 
 dependencies {
     compile files('libs/libandroid_tensorflow_inference_java.jar')
 }
+
+apply from: 'download_model.gradle'
