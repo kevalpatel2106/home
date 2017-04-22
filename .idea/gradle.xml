@@ -10,7 +10,8 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/Tensorflow-Android-Inference" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/dlib" />
+            <option value="$PROJECT_DIR$/demo-app" />
+            <option value="$PROJECT_DIR$/dlib-Android-Interface" />
             <option value="$PROJECT_DIR$/things" />
           </set>
         </option>

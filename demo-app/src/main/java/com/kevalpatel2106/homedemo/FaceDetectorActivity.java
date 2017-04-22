@@ -1,4 +1,4 @@
-package com.kevalpatel2106.home;
+package com.kevalpatel2106.homedemo;
 
 import android.content.Intent;
 import android.graphics.Bitmap;

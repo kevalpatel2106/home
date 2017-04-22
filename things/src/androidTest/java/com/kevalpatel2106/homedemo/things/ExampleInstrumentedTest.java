@@ -1,4 +1,4 @@
-package com.kevalpatel2106.home.things;
+package com.kevalpatel2106.homedemo.things;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

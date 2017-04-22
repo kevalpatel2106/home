@@ -1,4 +1,4 @@
-package com.kevalpatel2106.home.things;
+package com.kevalpatel2106.homedemo.things;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

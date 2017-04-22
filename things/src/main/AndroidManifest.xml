@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.kevalpatel2106.home.things">
+          package="com.kevalpatel2106.homedemo.things">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
@@ -14,7 +14,7 @@
 
         <!--<uses-library android:name="com.google.android.things"/>-->
 
-        <activity android:name=".MainActivity">
+        <activity android:name="com.kevalpatel2106.homedemo.things.MainActivity">
             <!-- Launch activity as default from Android Studio -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
