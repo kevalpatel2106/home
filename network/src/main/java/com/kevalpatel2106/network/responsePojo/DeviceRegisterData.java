@@ -27,18 +27,18 @@ import com.google.gson.annotations.SerializedName;
 
 @SuppressWarnings("unused")
 public class DeviceRegisterData {
-    @SerializedName("token")
+    @SerializedName("deviceName")
     @Expose
-    private String token;
-    @SerializedName("uid")
+    private String deviceName;
+    @SerializedName("deviceId")
     @Expose
-    private long userId;
+    private String deviceId;
 
-    public String getToken() {
-        return token;
+    public String getDeviceName() {
+        return deviceName;
     }
 
-    public long getUserId() {
-        return userId;
+    public String getDeviceId() {
+        return deviceId;
     }
 }

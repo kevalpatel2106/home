@@ -25,17 +25,10 @@ import com.google.gson.annotations.SerializedName;
  * @author 'https://github.com/kevalpatel2106'
  */
 @SuppressWarnings("unused")
-public class LogoutData {
-    @SerializedName("uid")
-    @Expose
-    private Long uid;
+public class DeleteDeviceData {
     @SerializedName("deviceId")
     @Expose
     private String deviceId;
-
-    public Long getUid() {
-        return uid;
-    }
 
     public String getDeviceId() {
         return deviceId;

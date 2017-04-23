@@ -20,8 +20,7 @@ import android.content.Context;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.kevalpatel.hourlogger.data.managers.UserSessionManager;
-import com.kevalpatel.hourlogger.utils.Utils;
+import com.kevalpatel2106.home.utils.managers.DeviceSessionManager;
 
 /**
  * Created by Keval on 27-Dec-16.
@@ -30,16 +29,11 @@ import com.kevalpatel.hourlogger.utils.Utils;
  */
 @SuppressWarnings("FieldCanBeLocal")
 public class DeleteDeviceRequest {
-
-    @SerializedName("uid")
-    @Expose
-    private long userId;
     @SerializedName("deviceId")
     @Expose
     private String deviceId;
 
     public DeleteDeviceRequest(Context context) {
-        this.deviceId = Utils.getDeviceId(context);
-        this.userId = new UserSessionManager(context).getUserId();
+        this.deviceId = new DeviceSessionManager(context).getDeviceId();
     }
 }

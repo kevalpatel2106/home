@@ -16,13 +16,8 @@
 
 package com.kevalpatel2106.network.requestPojo;
 
-import android.content.Context;
-import android.os.Build;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.kevalpatel.hourlogger.data.managers.UserSessionManager;
-import com.kevalpatel.hourlogger.utils.Utils;
 
 /**
  * Created by Keval on 02-Jan-17.
@@ -35,23 +30,15 @@ public class DeviceRegisterRequest {
     @SerializedName("deviceId")
     @Expose
     private String deviceId;
-    @SerializedName("gcmKey")
-    @Expose
-    private String gcmKey;
     @SerializedName("deviceName")
     @Expose
     private String deviceName;
-    @SerializedName("uid")
-    @Expose
-    private long userId;
 
-    public DeviceRegisterRequest(Context context) {
-        this.deviceId = Utils.getDeviceId(context);
-        this.deviceName = Build.MANUFACTURER + " " + Build.DEVICE;
-        this.userId = new UserSessionManager(context).getUserId();
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
     }
 
-    public void setGcmKey(String gcmKey) {
-        this.gcmKey = gcmKey;
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 }

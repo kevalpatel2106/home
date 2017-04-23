@@ -40,19 +40,15 @@ android {
 
     defaultConfig {
         applicationId packageName.admin
-
         //sdks
         minSdkVersion buidlConfig.min
         targetSdkVersion buidlConfig.target
 
         //Version config
-        versionCode versionConfig.versionCode
         versionName versionConfig.versionName
 
         //strip other than english resources
         resConfigs "en"
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -73,6 +69,7 @@ android {
             signingConfig signingConfigs.playStore
             minifyEnabled false
             zipAlignEnabled true
+            pseudoLocalesEnabled true
         }
     }
 
@@ -89,17 +86,6 @@ android {
 }
 
 dependencies {
-    compile project(projectModule.network)
-    compile project(projectModule.utils)
-
-    //Testing
-    testCompile testLib.junit
-    androidTestCompile(testLib.rules, excludeGrp)
-    androidTestCompile(testLib.esspresso, excludeGrp)
-    androidTestCompile(testLib.runner, excludeGrp)
-    androidTestCompile(testLib.esspressoIntents, excludeGrp)
-    androidTestCompile(testLib.contrib, excludeGrp)
-
     //Butter knife
     compile butterKnifeLib.butterKnife
     annotationProcessor butterKnifeLib.annotationProcessor

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context="com.kevalpatel2106.home.admin.AddDeviceActivity">
+
+    <TextView
+        style="@style/Base.TextAppearance.AppCompat.Headline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/name_of_the_device"/>
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/et_device_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/name_of_device_hint"
+        android:imeOptions="actionNext"
+        android:inputType="textCapSentences"/>
+
+    <TextView
+        style="@style/Base.TextAppearance.AppCompat.Headline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/device_id_heading"/>
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/et_device_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/device_id_hint"
+        android:imeOptions="actionDone"
+        android:inputType="textCapWords"/>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_register_device"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@color/accent"
+        android:text="Register device"/>
+
+</android.support.v7.widget.LinearLayoutCompat>

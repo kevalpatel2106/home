@@ -27,40 +27,25 @@ import com.google.gson.annotations.SerializedName;
 
 @SuppressWarnings("unused")
 public class LoginResponseData {
-    @SerializedName("uid")
+    @SerializedName("deviceName")
     @Expose
-    private Long uid;
-    @SerializedName("name")
+    private String deviceName;
+    @SerializedName("token")
     @Expose
-    private String name;
-    @SerializedName("email")
+    private String token;
+    @SerializedName("deviceId")
     @Expose
-    private String email;
-    @SerializedName("photo")
-    @Expose
-    private String photoUrl;
+    private String deviceId;
 
-    public Long getUid() {
-        return uid;
+    public String getToken() {
+        return token;
     }
 
-    public String getEmail() {
-        return email;
+    public String getDeviceName() {
+        return deviceName;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPhotoUrl() {
-        return photoUrl;
+    public String getDeviceId() {
+        return deviceId;
     }
 }

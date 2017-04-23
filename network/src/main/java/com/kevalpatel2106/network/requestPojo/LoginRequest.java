@@ -20,7 +20,7 @@ import android.content.Context;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.kevalpatel.hourlogger.utils.Utils;
+import com.kevalpatel2106.home.utils.Utils;
 
 /**
  * Created by Keval on 27-Dec-16.
@@ -30,29 +30,18 @@ import com.kevalpatel.hourlogger.utils.Utils;
 
 public class LoginRequest {
 
-    @SerializedName("email")
+    @SerializedName("deviceId")
     @Expose
-    private String email;
-    @SerializedName("password")
+    private String deviceId;
+    @SerializedName("gcmKey")
     @Expose
-    private String password;
-    @SerializedName("key")
-    @Expose
-    private String hashKey;
+    private String gcmKey;
 
     public LoginRequest(Context context) {
-        this.hashKey = Utils.printKeyHash(context);
+        this.deviceId = Utils.getDeviceId(context);
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setGcmKey(String gcmKey) {
+        this.gcmKey = gcmKey;
     }
 }
