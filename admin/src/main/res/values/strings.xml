@@ -1,5 +1,8 @@
 <resources>
-    <string name="app_name">Home Admin</string>
+    <string name="app_name">Home - Admin</string>
+    <string name="title_main">Home</string>
+    <string name="title_register_device">Register device</string>
+
     <string name="name_of_the_device">Name of the device</string>
     <string name="name_of_device_hint">e.g. John\'s Galaxy S8</string>
     <string name="device_id_heading">Device ID</string>

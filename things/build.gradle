@@ -108,4 +108,8 @@ dependencies {
     compile retrofitLib.gsonPlugin
     compile retrofitLib.rxPlugin
     compile retrofitLib.logger
+
+    compile firebaseLib.fcm
+    compile firebaseLib.core
 }
+apply plugin: 'com.google.gms.google-services'

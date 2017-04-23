@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 
+import com.kevalpatel2106.home.admin.base.BaseActivity;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -16,6 +18,8 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getSupportActionBar().setTitle(R.string.title_main);
     }
 
     @OnClick(R.id.btn_register_activity)

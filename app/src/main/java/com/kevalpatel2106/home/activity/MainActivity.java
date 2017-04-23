@@ -1,9 +1,11 @@
-package com.kevalpatel2106.home;
+package com.kevalpatel2106.home.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+import com.kevalpatel2106.home.R;
+import com.kevalpatel2106.home.base.BaseActivity;
+
+public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

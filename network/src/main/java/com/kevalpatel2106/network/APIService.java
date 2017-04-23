@@ -38,15 +38,16 @@ import rx.Observable;
 @SuppressWarnings("WeakerAccess")
 public interface APIService {
     String BASE_URL = "https://jarvis-2106.appspot.com/";
+    String ADMIN_BASE_URL = "http://admin.jarvis-2106.appspot.com/";
 
     //Login/Register apis
     @POST("updateGcmId")
-    Observable<BaseResponse<LoginResponseData>> uodateGcmId(@Body LoginRequest loginRequest);
+    Observable<BaseResponse<LoginResponseData>> updateGcmId(@Body LoginRequest loginRequest);
 
-    @POST("registerDevice")
+    @POST("admin/registerDevice")
     Observable<BaseResponse<DeviceRegisterData>> registerDevice(@Body DeviceRegisterRequest request);
 
-    @POST("deleteDevice")
+    @POST("admin/deleteDevice")
     Observable<BaseResponse<DeleteDeviceData>> deleteDevice(@Header("Authorization") String authorization,
                                                             @Body DeleteDeviceRequest logoutRequest);
 }

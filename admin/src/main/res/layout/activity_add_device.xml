@@ -34,15 +34,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/device_id_hint"
-        android:imeOptions="actionDone"
-        android:inputType="textCapWords"/>
+        android:imeOptions="actionDone"/>
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_register_device"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="@color/accent"
+        android:background="@drawable/btn_background"
         android:text="Register device"/>
 
 </android.support.v7.widget.LinearLayoutCompat>

@@ -122,4 +122,9 @@ dependencies {
     //Rx
     compile rxLib.rxJava
     compile rxLib.rxAndroid
+
+    compile firebaseLib.fcm
+    compile firebaseLib.core
 }
+apply plugin: 'com.google.gms.google-services'
+

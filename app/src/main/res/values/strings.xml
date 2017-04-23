@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Home</string>
+    <string name="btn_authenticate_device">Authenticate this device</string>
+    <string name="title_login_activity">Login Activity</string>
 </resources>

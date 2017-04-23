@@ -50,17 +50,39 @@ public final class RetrofitUtils {
         OkHttpClient.Builder client = new OkHttpClient.Builder();
 
         //Enable logging for debug build
-        if (BuildConfig.DEBUG) {
-            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            client.addInterceptor(interceptor);
-        }
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        client.addInterceptor(interceptor);
 
         //Building retrofit
         final Retrofit retrofit = new Retrofit.Builder()
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(APIService.BASE_URL)
+                .client(client.build())
+                .build();
+
+        return retrofit.create(APIService.class);
+    }
+
+    /**
+     * Get the instance of the retrofit {@link APIService}.
+     *
+     * @return {@link APIService}
+     */
+    public static APIService getAdminApiService() {
+        OkHttpClient.Builder client = new OkHttpClient.Builder();
+
+        //Enable logging for debug build
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        client.addInterceptor(interceptor);
+
+        //Building retrofit
+        final Retrofit retrofit = new Retrofit.Builder()
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(APIService.ADMIN_BASE_URL)
                 .client(client.build())
                 .build();
 

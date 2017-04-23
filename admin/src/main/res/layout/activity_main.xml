@@ -4,11 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
+    android:padding="16dp"
     tools:context="com.kevalpatel2106.home.admin.MainActivity">
 
     <Button
         android:id="@+id/btn_register_activity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/btn_background"
         android:text="Register new device"/>
 </RelativeLayout>

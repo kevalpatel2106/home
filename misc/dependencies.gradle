@@ -43,7 +43,9 @@ ext {
 
     //Firebase
     firebaseLib = [
-            ads: 'com.google.firebase:firebase-ads:' + firebaseVersion,
+            core: 'com.google.firebase:firebase-core:' + firebaseVersion,
+            ads : 'com.google.firebase:firebase-ads:' + firebaseVersion,
+            fcm : 'com.google.firebase:firebase-messaging:' + firebaseVersion,
     ]
 
     //retrofit dependency

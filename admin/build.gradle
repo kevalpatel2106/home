@@ -86,6 +86,9 @@ android {
 }
 
 dependencies {
+    compile project(projectModule.network)
+    compile project(projectModule.utils)
+
     //Butter knife
     compile butterKnifeLib.butterKnife
     annotationProcessor butterKnifeLib.annotationProcessor
@@ -93,3 +96,4 @@ dependencies {
     //Support
     compile supportLib.appCompat
 }
+apply plugin: 'com.google.gms.google-services'
