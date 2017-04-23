@@ -1,41 +1,42 @@
 apply plugin: 'com.android.library'
+apply from: '../misc/config.gradle'
+apply from: '../misc/dependencies.gradle'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion buidlConfig.compile
+    buildToolsVersion buidlConfig.buildToolVersion
+
+    compileOptions {
+        sourceCompatibility javaCompatibility.sourceCompatibility
+        targetCompatibility javaCompatibility.targetCompatibility
+    }
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 25
+        //sdks
+        minSdkVersion buidlConfig.min
+        targetSdkVersion buidlConfig.target
+
+        //strip other than english resources
+        resConfigs "en"
+
+        consumerProguardFiles proguardConfig.proguardPath
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+    packagingOptions packageExcludes
+
+    lintOptions {
+        abortOnError false
     }
 
-    android {
-        lintOptions {
-            abortOnError false
-        }
+    aaptOptions {
+        cruncherEnabled = false
+        useNewCruncher false
     }
-
-    // Use prebilt *.so. Don't run ndk-build
-    sourceSets {
-        main {
-            jniLibs.srcDirs = ["src/main/jniLibs"]
-        }
-    }
-
 }
 
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "com.android.support:appcompat-v7:25.3.1"
-    compile "com.android.support:support-annotations:25.3.1"
+    compile supportLib.annotations
 }
 
 buildscript {

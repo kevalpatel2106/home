@@ -1,32 +1,122 @@
 apply plugin: 'com.android.application'
+apply from: '../misc/config.gradle'
+apply from: '../misc/dependencies.gradle'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    signingConfigs {
+        playStore {
+            if (System.getenv("IS_CI_BUILD").equals("true")) {
+                //It is CI build, load it from the environment variables.
+                //See circle.yml file.
+                storeFile file(System.getenv("KEY_STORE"))
+                storePassword System.getenv("KEY_PASSWORD")
+                keyAlias System.getenv("KEY_ALIAS")
+                keyPassword System.getenv("ALIAS_PASSWORD")
+            } else {
+                //If this is the local build, load it from the keystore.properties file
+                File signFile = rootProject.file('./misc/keystore.properties')
+                if (signFile.exists()) {
+                    Properties props = new Properties()
+                    props.load(new FileInputStream(signFile))
+
+                    keyAlias props['keystore.alias']
+                    keyPassword props['keystore.password']
+                    storeFile file(props['keystore.file'])
+                    storePassword props['keystore.aliaspassword']
+                } else {
+                    throw new GradleException("keystore.properties file not found.")
+                }
+            }
+        }
+    }
+
+    compileSdkVersion buidlConfig.compile
+    buildToolsVersion buidlConfig.buildToolVersion
+
+    compileOptions {
+        sourceCompatibility javaCompatibility.sourceCompatibility
+        targetCompatibility javaCompatibility.targetCompatibility
+    }
 
     defaultConfig {
-        applicationId "com.kevalpatel2106.home"
-        minSdkVersion 21
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        applicationId packageName.app
+
+        //sdks
+        minSdkVersion buidlConfig.min
+        targetSdkVersion buidlConfig.target
+
+        //Version config
+        versionCode versionConfig.versionCode
+        versionName versionConfig.versionName
+
+        //strip other than english resources
+        resConfigs "en"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
+
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), proguardConfig.proguardPath
+            debuggable false
+            jniDebuggable false
+            renderscriptDebuggable false
+            signingConfig signingConfigs.playStore
+            pseudoLocalesEnabled false
+            zipAlignEnabled true
         }
+        debug {
+            debuggable true
+            jniDebuggable true
+            renderscriptDebuggable false
+            signingConfig signingConfigs.playStore
+            minifyEnabled false
+            zipAlignEnabled true
+        }
+    }
+
+    packagingOptions packageExcludes
+
+    lintOptions {
+        abortOnError false
+    }
+
+    aaptOptions {
+        cruncherEnabled = false
+        useNewCruncher false
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    testCompile 'junit:junit:4.12'
+    //Testing
+    testCompile testLib.junit
+    androidTestCompile(testLib.rules, excludeGrp)
+    androidTestCompile(testLib.esspresso, excludeGrp)
+    androidTestCompile(testLib.runner, excludeGrp)
+    androidTestCompile(testLib.esspressoIntents, excludeGrp)
+    androidTestCompile(testLib.contrib, excludeGrp)
+
+    //Butter knife
+    compile butterKnifeLib.butterKnife
+    annotationProcessor butterKnifeLib.annotationProcessor
+
+    //GSON
+    compile otherLib.gson
+
+    //Retrofit
+    compile retrofitLib.retrofit
+    compile retrofitLib.gsonPlugin
+    compile retrofitLib.rxPlugin
+    compile retrofitLib.logger
+
+    //Support
+    compile supportLib.appCompat
+    compile supportLib.recyclerView
+    compile supportLib.cardView
+    compile supportLib.design
+
+    //Rx
+    compile rxLib.rxJava
+    compile rxLib.rxAndroid
 }

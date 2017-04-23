@@ -1,0 +1,47 @@
+apply plugin: 'com.android.library'
+apply from: '../misc/config.gradle'
+apply from: '../misc/dependencies.gradle'
+
+android {
+    compileSdkVersion buidlConfig.compile
+    buildToolsVersion buidlConfig.buildToolVersion
+
+    compileOptions {
+        sourceCompatibility javaCompatibility.sourceCompatibility
+        targetCompatibility javaCompatibility.targetCompatibility
+    }
+
+    defaultConfig {
+        //sdks
+        minSdkVersion buidlConfig.min
+        targetSdkVersion buidlConfig.target
+
+        //strip other than english resources
+        resConfigs "en"
+
+        consumerProguardFiles proguardConfig.proguardPath
+    }
+
+    sourceSets {
+        main {
+            assets.srcDirs = ['./assets']
+        }
+    }
+
+    packagingOptions packageExcludes
+
+    lintOptions {
+        abortOnError false
+    }
+
+    aaptOptions {
+        cruncherEnabled = false
+        useNewCruncher false
+    }
+}
+
+dependencies {
+    compile files('libs/libandroid_tensorflow_inference_java.jar')
+}
+
+apply from: 'download_model.gradle'

@@ -20,7 +20,7 @@ import java.util.PriorityQueue;
  */
 public class TensorFlowImageClassifier implements Classifier {
 
-    private static final String TAG = "TFImageClassifier";
+    public static final int INPUT_SIZE = 224;
 
 
     // These are the settings for the original v1 Inception model. If you want to
@@ -29,9 +29,7 @@ public class TensorFlowImageClassifier implements Classifier {
     // INPUT_NAME = "Mul:0", and OUTPUT_NAME = "final_result:0".
     // You'll also need to update the MODEL_FILE and LABEL_FILE paths to point to
     // the ones you produced.
-
-    public static final int INPUT_SIZE = 224;
-
+    private static final String TAG = "TFImageClassifier";
     // Note: the actual number of classes for Inception is 1001, but the output layer size is 1008.
     private static final int NUM_CLASSES = 1008;
     private static final int IMAGE_MEAN = 117;

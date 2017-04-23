@@ -12,10 +12,14 @@ import java.util.List;
  * @author 'https://github.com/androidthings/sample-tensorflow-imageclassifier/blob/master/app/src/main/java/com/example/androidthings/imageclassifier/classifier/Classifier.java'
  */
 public interface Classifier {
+    List<Recognition> recognizeImage(Bitmap bitmap);
+
+    void close();
+
     /**
      * An immutable result returned by a Classifier describing what was recognized.
      */
-    public class Recognition {
+    class Recognition {
         /**
          * A unique identifier for what has been recognized. Specific to the class, not the instance of
          * the object.
@@ -83,8 +87,4 @@ public interface Classifier {
             return resultString.trim();
         }
     }
-
-    List<Recognition> recognizeImage(Bitmap bitmap);
-
-    void close();
 }

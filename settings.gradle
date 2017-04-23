@@ -1,5 +1,5 @@
 include ':demo-app',
         ':app',
         ':things',
-        ':Tensorflow-Android-Inference',
-        ':dlib-Android-Interface'
+        ':tensorflow-android-inference',
+        ':dlib-android-interface'
