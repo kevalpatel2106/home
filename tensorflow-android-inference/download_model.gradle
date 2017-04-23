@@ -52,7 +52,7 @@ task extractModels(type: Copy) {
     exclude '**/LICENSE'
 
     def needDownload = false
-    if (!new File(ASSET_DIR).exists() && new File(ASSET_DIR).list().length < 2) {
+    if (!new File(ASSET_DIR).exists() || new File(ASSET_DIR).list().length < 2) {
         needDownload = true
     }
 
