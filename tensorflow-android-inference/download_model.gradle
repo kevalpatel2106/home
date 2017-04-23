@@ -9,7 +9,7 @@
  */
 // import DownloadModels task
 def ASSET_DIR = projectDir.toString() + '/assets'
-def TMP_DIR = projectDir.toString() + '/build/download/'
+def TMP_DIR = projectDir.toString() + '/build/download'
 
 // hard coded model files
 // LINT.IfChange
@@ -52,10 +52,8 @@ task extractModels(type: Copy) {
     exclude '**/LICENSE'
 
     def needDownload = false
-    for (f in models) {
-        if (!(new File(TMP_DIR + '/' + f)).exists()) {
-            needDownload = true
-        }
+    if (!new File(ASSET_DIR).exists() && new File(ASSET_DIR).list().length < 2) {
+        needDownload = true
     }
 
     if (needDownload) {

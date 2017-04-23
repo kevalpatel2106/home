@@ -9,6 +9,8 @@ ext {
     projectModule = [
             tensorflowInterface: ':tensorflow-android-inference',
             dlibInterface      : ':dlib-android-interface',
+            network            : ':network',
+            utils              : ':utils',
     ]
 
     //Exclude group for the test dependency

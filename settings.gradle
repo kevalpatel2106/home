@@ -1,4 +1,6 @@
-include ':demo-app',
+include ':demo-app', ':utils',
+        ':admin',
+        ':network',
         ':app',
         ':things',
         ':tensorflow-android-inference',

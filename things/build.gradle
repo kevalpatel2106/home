@@ -91,6 +91,8 @@ dependencies {
     provided androidThingsLib.things
 
     compile project(projectModule.tensorflowInterface)
+    compile project(projectModule.network)
+    compile project(projectModule.utils)
 
     //Test dependency
     testCompile testLib.junit
@@ -106,5 +108,4 @@ dependencies {
     compile retrofitLib.gsonPlugin
     compile retrofitLib.rxPlugin
     compile retrofitLib.logger
-
 }

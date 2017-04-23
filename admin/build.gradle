@@ -39,7 +39,7 @@ android {
     }
 
     defaultConfig {
-        applicationId packageName.app
+        applicationId packageName.admin
 
         //sdks
         minSdkVersion buidlConfig.min
@@ -104,22 +104,6 @@ dependencies {
     compile butterKnifeLib.butterKnife
     annotationProcessor butterKnifeLib.annotationProcessor
 
-    //GSON
-    compile otherLib.gson
-
-    //Retrofit
-    compile retrofitLib.retrofit
-    compile retrofitLib.gsonPlugin
-    compile retrofitLib.rxPlugin
-    compile retrofitLib.logger
-
     //Support
     compile supportLib.appCompat
-    compile supportLib.recyclerView
-    compile supportLib.cardView
-    compile supportLib.design
-
-    //Rx
-    compile rxLib.rxJava
-    compile rxLib.rxAndroid
 }
