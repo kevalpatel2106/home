@@ -18,9 +18,16 @@
         android:background="@drawable/btn_background"
         android:text="Register new device"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/device_list"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_to_refresh_device_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/btn_register_activity"/>
+        android:layout_above="@id/btn_register_activity">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/device_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/btn_register_activity"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>
