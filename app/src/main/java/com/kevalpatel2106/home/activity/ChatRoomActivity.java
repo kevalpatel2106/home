@@ -8,6 +8,9 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatEditText;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -19,27 +22,41 @@ import com.kevalpatel2106.home.base.BaseActivity;
 import java.util.Map;
 
 import ai.api.AIListener;
+import ai.api.AIServiceException;
 import ai.api.android.AIConfiguration;
 import ai.api.android.AIService;
 import ai.api.model.AIError;
+import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
 import ai.api.model.Result;
 import butterknife.BindView;
 import butterknife.OnClick;
+import rx.Observable;
+import rx.Observer;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
-public class ChatRoomActivity extends BaseActivity implements AIListener {
+public class ChatRoomActivity extends BaseActivity
+        implements AIListener, TextWatcher {
     private static final int REQ_CODE_AUDIO_PERMISSION = 7872;
+
     @BindView(R.id.mic_button)
     FloatingActionButton mMicBtn;
+
+    @BindView(R.id.et_command)
+    AppCompatEditText mCommandEt;
+
     private boolean isListening = false;
     private boolean isProcessing = false;
+
     private AIService mAiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatroom);
-        setNormalMic();
+        setSendBtn();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -58,6 +75,14 @@ public class ChatRoomActivity extends BaseActivity implements AIListener {
         mMicBtn.setBackgroundColor(ContextCompat.getColor(this, R.color.primary));
     }
 
+    private void setSendBtn() {
+        isListening = false;
+
+        mMicBtn.setImageResource(R.drawable.ic_send);
+        mMicBtn.setColorFilter(Color.rgb(255, 255, 255));
+        mMicBtn.setBackgroundColor(ContextCompat.getColor(this, R.color.primary));
+    }
+
     private void setRecordingMic() {
         isListening = true;
 
@@ -66,7 +91,9 @@ public class ChatRoomActivity extends BaseActivity implements AIListener {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQ_CODE_AUDIO_PERMISSION:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -96,11 +123,42 @@ public class ChatRoomActivity extends BaseActivity implements AIListener {
     void onMicClick() {
         if (isProcessing) return;
 
-        if (!isListening) {
-            Log.d("APIAI", "listen command fired");
+        if (mCommandEt.getText().toString().trim().length() > 0) {
+            final Observer<AIResponse> observer = new Observer<AIResponse>() {
+                @Override
+                public void onCompleted() {
+                    //Do nothing
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    ChatRoomActivity.this.onError(new AIError(e.getMessage()));
+                }
+
+                @Override
+                public void onNext(AIResponse aiResponse) {
+                    onResult(aiResponse);
+                }
+            };
+            Observable<AIResponse> observable = Observable.create(new Observable.OnSubscribe<AIResponse>() {
+                @Override
+                public void call(Subscriber<? super AIResponse> subscriber) {
+                    try {
+                        final AIRequest aiRequest = new AIRequest(mCommandEt.getText().toString().trim());
+                        observer.onNext(mAiService.textRequest(aiRequest));
+                    } catch (AIServiceException e) {
+                        e.printStackTrace();
+                        observer.onError(e);
+                    }
+                }
+            });
+            observable.subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(observer);
+
+        } else if (!isListening) {
             mAiService.startListening();
         } else {
-            Log.d("APIAI", "stop listen command fired");
             mAiService.stopListening();
         }
     }
@@ -151,5 +209,24 @@ public class ChatRoomActivity extends BaseActivity implements AIListener {
     public void onListeningFinished() {
         Log.d("APIAI", "listen finished");
         setNormalMic();
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if (s.length() > 0) {
+            setSendBtn();
+        } else {
+            setNormalMic();
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
     }
 }

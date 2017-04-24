@@ -55,16 +55,21 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         //Add keys
-        //If this is the local build, load it from the keystore.properties file
-        File signFile = rootProject.file('./misc/keystore.properties')
-        if (signFile.exists()) {
-            Properties props = new Properties()
-            props.load(new FileInputStream(signFile))
+        if (!System.getenv("IS_CI_BUILD").equals("true")) {
+            //If this is the local build, load it from the keystore.properties file
+            File signFile = rootProject.file('./misc/keystore.properties')
+            if (signFile.exists()) {
+                Properties props = new Properties()
+                props.load(new FileInputStream(signFile))
 
-            buildConfigField "String", "apiai_api_key", props['apiai.clientToken']
-            buildConfigField "String", "api_ai_access_key", props['apiai.developerToken']
+                buildConfigField "String", "apiai_api_key", props['apiai.clientToken']
+                buildConfigField "String", "api_ai_access_key", props['apiai.developerToken']
+            } else {
+                throw new GradleException("keystore.properties file not found.")
+            }
         } else {
-            throw new GradleException("keystore.properties file not found.")
+            buildConfigField "String", "apiai_api_key", System.getenv("API_AI_CLIENT_TOKEN")
+            buildConfigField "String", "api_ai_access_key", System.getenv("API_AI_DEV_TOKEN")
         }
     }
 
