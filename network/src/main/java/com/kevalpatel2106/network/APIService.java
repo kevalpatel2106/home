@@ -46,12 +46,13 @@ public interface APIService {
     Observable<BaseResponse<LoginResponseData>> updateGcmId(@Body LoginRequest loginRequest);
 
     @POST("admin/registerDevice")
-    Observable<BaseResponse<DeviceRegisterData>> registerDevice(@Body DeviceRegisterRequest request);
+    Observable<BaseResponse<DeviceRegisterData>> registerDevice(@Header("Authorization") String authorization,
+                                                                @Body DeviceRegisterRequest request);
 
     @POST("admin/deleteDevice")
     Observable<BaseResponse<DeleteDeviceData>> deleteDevice(@Header("Authorization") String authorization,
                                                             @Body DeleteDeviceRequest logoutRequest);
 
     @POST("admin/getAllDevices")
-    Observable<BaseResponse<DeviceListData>> getAllDevices();
+    Observable<BaseResponse<DeviceListData>> getAllDevices(@Header("Authorization") String authorization);
 }

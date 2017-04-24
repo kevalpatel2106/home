@@ -4,9 +4,12 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatSpinner;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.kevalpatel2106.home.admin.base.BaseActivity;
+import com.kevalpatel2106.home.utils.cons.DeviceType;
 import com.kevalpatel2106.network.APIObserver;
 import com.kevalpatel2106.network.RetrofitUtils;
 import com.kevalpatel2106.network.Validator;
@@ -27,6 +30,9 @@ public class AddDeviceActivity extends BaseActivity {
     @BindView(R.id.et_device_name)
     AppCompatEditText mDeviceNameEt;
 
+    @BindView(R.id.sp_device_type)
+    AppCompatSpinner mDeviceTypeSp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +41,10 @@ public class AddDeviceActivity extends BaseActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.title_register_device);
+
+        mDeviceTypeSp.setAdapter(new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item,
+                DeviceType.DEVICE_TYPES));
     }
 
     @OnClick(R.id.btn_register_device)
@@ -57,7 +67,9 @@ public class AddDeviceActivity extends BaseActivity {
                 DeviceRegisterRequest request = new DeviceRegisterRequest();
                 request.setDeviceName(deviceName);
                 request.setDeviceId(deviceId);
-                addSubscription(RetrofitUtils.subscribe(RetrofitUtils.getAdminApiService().registerDevice(request),
+                request.setDeviceType((String) mDeviceTypeSp.getSelectedItem());
+                addSubscription(RetrofitUtils.subscribe(RetrofitUtils.getAdminApiService()
+                                .registerDevice(RetrofitUtils.getAuthString(this), request),
                         new APIObserver<DeviceRegisterData>() {
                             @Override
                             public void onError(String errorMessage, int statusCode) {

@@ -7,4 +7,5 @@
     <string name="name_of_device_hint">e.g. John\'s Galaxy S8</string>
     <string name="device_id_heading">Device ID</string>
     <string name="device_id_hint">e.g. UERGC47SM</string>
+    <string name="device_type_heading">Device Type</string>
 </resources>

@@ -33,6 +33,9 @@ public class DeviceRegisterRequest {
     @SerializedName("deviceName")
     @Expose
     private String deviceName;
+    @SerializedName("deviceType")
+    @Expose
+    private String deviceType;
 
     public void setDeviceName(String deviceName) {
         this.deviceName = deviceName;
@@ -40,5 +43,9 @@ public class DeviceRegisterRequest {
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
+    }
+
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
     }
 }

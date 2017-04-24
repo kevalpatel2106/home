@@ -36,6 +36,18 @@
         android:hint="@string/device_id_hint"
         android:imeOptions="actionDone"/>
 
+    <TextView
+        style="@style/Base.TextAppearance.AppCompat.Headline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/device_type_heading"/>
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/sp_device_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_register_device"
         android:layout_width="match_parent"

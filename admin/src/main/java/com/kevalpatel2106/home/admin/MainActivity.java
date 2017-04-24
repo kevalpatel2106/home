@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 import com.kevalpatel2106.home.admin.base.BaseActivity;
@@ -11,6 +13,7 @@ import com.kevalpatel2106.network.APIObserver;
 import com.kevalpatel2106.network.RetrofitUtils;
 import com.kevalpatel2106.network.responsePojo.DeviceListData;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -21,7 +24,11 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.btn_register_activity)
     AppCompatButton mRegisterBtn;
 
+    @BindView(R.id.device_list)
+    RecyclerView mDeviceListRv;
 
+    private ArrayList<DeviceListData.Device> mDevices;
+    private DeviceListAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +36,11 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().setTitle(R.string.title_main);
+
+        mDevices = new ArrayList<>();
+        mAdapter = new DeviceListAdapter(this,mDevices);
+        mDeviceListRv.setLayoutManager(new LinearLayoutManager(this));
+        mDeviceListRv.setAdapter(mAdapter);
 
         getAllDevice();
     }
@@ -40,7 +52,7 @@ public class MainActivity extends BaseActivity {
         progressDialog.show();
 
         addSubscription(RetrofitUtils.subscribe(
-                RetrofitUtils.getAdminApiService().getAllDevices(),
+                RetrofitUtils.getAdminApiService().getAllDevices(RetrofitUtils.getAuthString(this)),
                 new APIObserver<DeviceListData>() {
                     @Override
                     public void onError(String errorMessage, int statusCode) {
@@ -55,7 +67,9 @@ public class MainActivity extends BaseActivity {
                         progressDialog.dismiss();
 
                         //List of all the devices.
-                        List<DeviceListData.Device> devices = deviceListData.getDevices();
+                        mDevices.clear();
+                        mDevices.addAll(deviceListData.getDevices());
+                        mAdapter.notifyDataSetChanged();
                     }
 
                 }));

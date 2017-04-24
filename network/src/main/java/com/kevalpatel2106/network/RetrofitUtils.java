@@ -20,6 +20,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Base64;
 
+import com.kevalpatel2106.home.utils.Utils;
 import com.kevalpatel2106.home.utils.managers.DeviceSessionManager;
 
 import okhttp3.OkHttpClient;
@@ -111,8 +112,8 @@ public final class RetrofitUtils {
      * @return (UserId : Token) base64 encoded string
      */
     public static String getAuthString(Context context) {
-        DeviceSessionManager userSessionManager = new DeviceSessionManager(context);
-        return "Basic " + Base64.encodeToString((userSessionManager.getDeviceId() + ":" + userSessionManager.getToken()).getBytes(),
+        DeviceSessionManager deviceSessionManager = new DeviceSessionManager(context);
+        return "Basic " + Base64.encodeToString((Utils.getDeviceId(context) + ":" + deviceSessionManager.getToken()).getBytes(),
                 Base64.NO_WRAP);
     }
 }
