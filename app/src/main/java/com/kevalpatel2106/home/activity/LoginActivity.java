@@ -85,7 +85,7 @@ public class LoginActivity extends BaseActivity {
                                 .setNewSession(loginResponseData.getDeviceId(), loginResponseData.getToken());
 
                         Toast.makeText(LoginActivity.this,
-                                "Device logged in successfully.",
+                                "DeviceData logged in successfully.",
                                 Toast.LENGTH_LONG).show();
 
                         startActivity(new Intent(LoginActivity.this, MainActivity.class));

@@ -14,39 +14,38 @@
  * limitations under the License.
  */
 
-package com.kevalpatel2106.network.responsePojo;
+package com.kevalpatel2106.network.responsePojo.base;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Keval on 27-Dec-16.
+ * Basic response that is use to parse the normal response pattern.
+ * <code>{"d":{...},"s":{"c":0,"m":"Error message"}}</code>
+ * <p>
+ * <B>NOTE:</B>
+ * Here generic T indicates the POJO that represents "d" in above response. Each response will have it's
+ * different POJOs for  response data.
  *
  * @author {@link 'https://github.com/kevalpatel2106'}
  */
+
 @SuppressWarnings("unused")
-public final class Status {
-    @SerializedName("c")
+public class BaseResponse<T> {
+    @SerializedName("d")
     @Expose
-    private Integer c;
-    @SerializedName("m")
+    private T d;
+
+    @SerializedName("s")
     @Expose
-    private String m;
+    private Status s;
 
-    public Integer getStatusCode() {
-        return c;
+    public Status getStatus() {
+        return s;
     }
 
-    public void setC(Integer c) {
-        this.c = c;
+    public T getData() {
+        return d;
     }
-
-    public String getMessage() {
-        return m;
-    }
-
-    public void setM(String m) {
-        this.m = m;
-    }
-
 }

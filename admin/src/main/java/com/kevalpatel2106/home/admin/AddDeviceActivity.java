@@ -71,16 +71,16 @@ public class AddDeviceActivity extends BaseActivity {
                             public void onSuccess(DeviceRegisterData deviceRegisterData) {
                                 progressDialog.dismiss();
                                 Toast.makeText(AddDeviceActivity.this,
-                                        "Device registered successfully.",
+                                        "DeviceData registered successfully.",
                                         Toast.LENGTH_LONG).show();
                                 finish();
                             }
                         }));
             } else {
-                mDeviceIdEt.setError("Device id must be more than " + Validator.DEVICE_ID_MIN_LENGTH + " characters.");
+                mDeviceIdEt.setError("DeviceData id must be more than " + Validator.DEVICE_ID_MIN_LENGTH + " characters.");
             }
         } else {
-            mDeviceNameEt.setError("Device name must be more than " + Validator.DEVICE_NAME_MIN_LENGTH + " characters.");
+            mDeviceNameEt.setError("DeviceData name must be more than " + Validator.DEVICE_NAME_MIN_LENGTH + " characters.");
         }
     }
 }

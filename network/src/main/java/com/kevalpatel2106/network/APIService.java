@@ -19,10 +19,11 @@ package com.kevalpatel2106.network;
 import com.kevalpatel2106.network.requestPojo.DeleteDeviceRequest;
 import com.kevalpatel2106.network.requestPojo.DeviceRegisterRequest;
 import com.kevalpatel2106.network.requestPojo.LoginRequest;
-import com.kevalpatel2106.network.responsePojo.BaseResponse;
 import com.kevalpatel2106.network.responsePojo.DeleteDeviceData;
+import com.kevalpatel2106.network.responsePojo.DeviceListData;
 import com.kevalpatel2106.network.responsePojo.DeviceRegisterData;
 import com.kevalpatel2106.network.responsePojo.LoginResponseData;
+import com.kevalpatel2106.network.responsePojo.base.BaseResponse;
 
 import retrofit2.http.Body;
 import retrofit2.http.Header;
@@ -50,4 +51,7 @@ public interface APIService {
     @POST("admin/deleteDevice")
     Observable<BaseResponse<DeleteDeviceData>> deleteDevice(@Header("Authorization") String authorization,
                                                             @Body DeleteDeviceRequest logoutRequest);
+
+    @POST("admin/getAllDevices")
+    Observable<BaseResponse<DeviceListData>> getAllDevices(@Header("Authorization") String authorization);
 }

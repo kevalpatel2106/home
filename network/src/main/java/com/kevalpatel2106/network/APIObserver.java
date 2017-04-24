@@ -17,7 +17,7 @@
 package com.kevalpatel2106.network;
 
 
-import com.kevalpatel2106.network.responsePojo.BaseResponse;
+import com.kevalpatel2106.network.responsePojo.base.BaseResponse;
 
 import rx.Observer;
 
