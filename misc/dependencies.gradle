@@ -82,4 +82,10 @@ ext {
     androidThingsLib = [
             things: 'com.google.android.things:androidthings:0.3-devpreview',
     ]
+
+    apiai = [
+            libai    : 'ai.api:libai:1.4.8',
+            sdk      : 'ai.api:sdk:2.0.5@aar',
+            commonsio: 'commons-io:commons-io:2.4'
+    ]
 }

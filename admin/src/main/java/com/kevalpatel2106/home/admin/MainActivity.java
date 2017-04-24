@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+/**
+ * This activity displays the list of all the devices registered.
+ */
 public class MainActivity extends BaseActivity {
 
     @BindView(R.id.btn_register_activity)
@@ -40,7 +43,7 @@ public class MainActivity extends BaseActivity {
         getSupportActionBar().setTitle(R.string.title_main);
 
         mDevices = new ArrayList<>();
-        mAdapter = new DeviceListAdapter(this,mDevices);
+        mAdapter = new DeviceListAdapter(this, mDevices);
         mDeviceListRv.setLayoutManager(new LinearLayoutManager(this));
         mDeviceListRv.setAdapter(mAdapter);
 
@@ -55,6 +58,9 @@ public class MainActivity extends BaseActivity {
         getAllDevice();
     }
 
+    /**
+     * Get the list of all the devices registered.
+     */
     private void getAllDevice() {
         addSubscription(RetrofitUtils.subscribe(
                 RetrofitUtils.getAdminApiService().getAllDevices(RetrofitUtils.getAuthString(this)),

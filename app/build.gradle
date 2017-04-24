@@ -53,6 +53,19 @@ android {
         resConfigs "en"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        //Add keys
+        //If this is the local build, load it from the keystore.properties file
+        File signFile = rootProject.file('./misc/keystore.properties')
+        if (signFile.exists()) {
+            Properties props = new Properties()
+            props.load(new FileInputStream(signFile))
+
+            buildConfigField "String", "apiai_api_key", props['apiai.clientToken']
+            buildConfigField "String", "api_ai_access_key", props['apiai.developerToken']
+        } else {
+            throw new GradleException("keystore.properties file not found.")
+        }
     }
 
     buildTypes {
@@ -123,8 +136,14 @@ dependencies {
     compile rxLib.rxJava
     compile rxLib.rxAndroid
 
+    //firebase
     compile firebaseLib.fcm
     compile firebaseLib.core
+
+    //Api ai
+    compile apiai.libai
+    compile apiai.sdk
+    compile apiai.commonsio
 }
 apply plugin: 'com.google.gms.google-services'
 

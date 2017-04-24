@@ -88,7 +88,7 @@ public class LoginActivity extends BaseActivity {
                                 "DeviceData logged in successfully.",
                                 Toast.LENGTH_LONG).show();
 
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        startActivity(new Intent(LoginActivity.this, ChatRoomActivity.class));
                         finish();
                     }
                 }));

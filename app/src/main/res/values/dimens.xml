@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="mic_fab_padding">10dp</dimen>
+    <dimen name="mic_fab_elevation">4dp</dimen>
+    <dimen name="mic_fab_border_width">2dp</dimen>
+    <dimen name="mic_fab_dimen">50dp</dimen>
+    <dimen name="activity_padding_dimen">16dp</dimen>
+    <dimen name="chat_input_et_horizontal_padding">12dp</dimen>
+    <dimen name="chat_input_et_vertical_padding">6dp</dimen>
+    <dimen name="chat_input_card_vertical_margin">8dp</dimen>
+    <dimen name="chat_input_card_radius">4dp</dimen>
+    <dimen name="chat_input_card_elevation">4dp</dimen>
+    <dimen name="chat_input_card_horizontal_margin">10dp</dimen>
+</resources>

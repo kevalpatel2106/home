@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:padding="@dimen/activity_padding_dimen"
     tools:context="com.kevalpatel2106.home.activity.LoginActivity">
 
     <android.support.v7.widget.AppCompatButton

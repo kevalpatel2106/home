@@ -2,4 +2,6 @@
     <string name="app_name">Home</string>
     <string name="btn_authenticate_device">Authenticate this device</string>
     <string name="title_login_activity">Login Activity</string>
+    <string name="error_chat_room_record_permission_not_available">Permission to record audio is not available.</string>
+    <string name="chat_input_et_hint">Type something...</string>
 </resources>
