@@ -53,5 +53,5 @@ public interface APIService {
                                                             @Body DeleteDeviceRequest logoutRequest);
 
     @POST("admin/getAllDevices")
-    Observable<BaseResponse<DeviceListData>> getAllDevices(@Header("Authorization") String authorization);
+    Observable<BaseResponse<DeviceListData>> getAllDevices();
 }

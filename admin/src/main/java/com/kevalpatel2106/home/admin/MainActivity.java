@@ -21,6 +21,8 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.btn_register_activity)
     AppCompatButton mRegisterBtn;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +40,7 @@ public class MainActivity extends BaseActivity {
         progressDialog.show();
 
         addSubscription(RetrofitUtils.subscribe(
-                RetrofitUtils.getAdminApiService().getAllDevices(RetrofitUtils.getAuthString(this)),
+                RetrofitUtils.getAdminApiService().getAllDevices(),
                 new APIObserver<DeviceListData>() {
                     @Override
                     public void onError(String errorMessage, int statusCode) {
@@ -50,10 +52,10 @@ public class MainActivity extends BaseActivity {
 
                     @Override
                     public void onSuccess(DeviceListData deviceListData) {
+                        progressDialog.dismiss();
+
                         //List of all the devices.
                         List<DeviceListData.Device> devices = deviceListData.getDevices();
-
-                        //TODO display in recycler view.
                     }
 
                 }));

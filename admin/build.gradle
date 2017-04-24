@@ -95,5 +95,6 @@ dependencies {
 
     //Support
     compile supportLib.appCompat
+    compile supportLib.recyclerView
 }
 apply plugin: 'com.google.gms.google-services'
