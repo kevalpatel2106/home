@@ -2,8 +2,10 @@ package com.kevalpatel2106.home.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.speech.SpeechRecognizer;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -18,6 +20,7 @@ import com.google.gson.JsonElement;
 import com.kevalpatel2106.home.BuildConfig;
 import com.kevalpatel2106.home.R;
 import com.kevalpatel2106.home.base.BaseActivity;
+import com.kevalpatel2106.home.utils.tts.TTS;
 
 import java.util.Map;
 
@@ -56,7 +59,7 @@ public class ChatRoomActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatroom);
-        setSendBtn();
+        setNormalMic();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -71,8 +74,10 @@ public class ChatRoomActivity extends BaseActivity
     private void setNormalMic() {
         isListening = false;
 
+        mMicBtn.setImageResource(R.drawable.ic_mic);
         mMicBtn.setColorFilter(Color.rgb(255, 255, 255));
-        mMicBtn.setBackgroundColor(ContextCompat.getColor(this, R.color.primary));
+        mMicBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat
+                .getColor(this, R.color.primary)));
     }
 
     private void setSendBtn() {
@@ -80,14 +85,17 @@ public class ChatRoomActivity extends BaseActivity
 
         mMicBtn.setImageResource(R.drawable.ic_send);
         mMicBtn.setColorFilter(Color.rgb(255, 255, 255));
-        mMicBtn.setBackgroundColor(ContextCompat.getColor(this, R.color.primary));
+        mMicBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat
+                .getColor(this, R.color.primary)));
     }
 
     private void setRecordingMic() {
         isListening = true;
 
+        mMicBtn.setImageResource(R.drawable.ic_mic);
         mMicBtn.setColorFilter(Color.rgb(29, 102, 96));
-        mMicBtn.setBackgroundColor(ContextCompat.getColor(this, android.R.color.holo_red_dark));
+        mMicBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat
+                .getColor(this, android.R.color.holo_red_dark)));
     }
 
     @Override
@@ -117,6 +125,16 @@ public class ChatRoomActivity extends BaseActivity
 
         mAiService = AIService.getService(this, config);
         mAiService.setListener(this);
+
+        mCommandEt.addTextChangedListener(this);
+
+        TTS.init(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        TTS.release();
     }
 
     @OnClick(R.id.mic_button)
@@ -157,8 +175,16 @@ public class ChatRoomActivity extends BaseActivity
                     .subscribe(observer);
 
         } else if (!isListening) {
-            mAiService.startListening();
+
+            if (SpeechRecognizer.isRecognitionAvailable(this)) {
+                mAiService.startListening();
+            } else {
+                Toast.makeText(this,
+                        "Speech recognition isn't supported on this device.",
+                        Toast.LENGTH_LONG).show();
+            }
         } else {
+
             mAiService.stopListening();
         }
     }
@@ -178,7 +204,10 @@ public class ChatRoomActivity extends BaseActivity
         }
 
         // Show results in TextView.
-        Log.d("Query:", result.getResolvedQuery() + "\nAction: " + result.getAction() + "\nParameters: " + parameterString);
+        final String speech = result.getFulfillment().getSpeech();
+
+        Log.d("Query:", speech + "\nAction: " + result.getAction() + "\nParameters: " + parameterString);
+        TTS.speak(speech);
     }
 
     @Override
