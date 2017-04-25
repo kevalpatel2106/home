@@ -18,13 +18,11 @@ import android.util.Log;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
-import com.google.gson.JsonElement;
 import com.kevalpatel2106.home.BuildConfig;
+import com.kevalpatel2106.home.ChatBotResponseManager;
 import com.kevalpatel2106.home.R;
 import com.kevalpatel2106.home.base.BaseActivity;
 import com.kevalpatel2106.home.utils.tts.TTS;
-
-import java.util.Map;
 
 import ai.api.AIListener;
 import ai.api.AIServiceException;
@@ -169,15 +167,16 @@ public class ChatRoomActivity extends BaseActivity
         if (isProcessing) return;
 
         //If there is text in the command section, send it as text command.
-        if (mCommandEt.getText().toString().trim().length() > 0) {
+        final String commandTxt = mCommandEt.getText().toString().trim();
+        mCommandEt.setText("");
+        if (commandTxt.length() > 0) {
 
-            mCommandTv.setText(mCommandEt.getText().toString().trim());
+            mCommandTv.setText(commandTxt);
 
             //Create observer in Rx.
             final Observer<AIResponse> observer = new Observer<AIResponse>() {
                 @Override
                 public void onCompleted() {
-                    mCommandEt.setText("");
                 }
 
                 @Override
@@ -197,7 +196,7 @@ public class ChatRoomActivity extends BaseActivity
                 public void call(Subscriber<? super AIResponse> subscriber) {
                     try {
                         //Make api request
-                        final AIRequest aiRequest = new AIRequest(mCommandEt.getText().toString().trim());
+                        final AIRequest aiRequest = new AIRequest(commandTxt);
                         observer.onNext(mAiService.textRequest(aiRequest));
                     } catch (AIServiceException e) {
                         e.printStackTrace();
@@ -241,17 +240,10 @@ public class ChatRoomActivity extends BaseActivity
     @Override
     public void onResult(AIResponse aiResponse) {
         isProcessing = false;
+
         final Result result = aiResponse.getResult();
-
-        // Get parameters
-        String parameterString = "";
-        if (result.getParameters() != null && !result.getParameters().isEmpty()) {
-            for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
-                parameterString += "(" + entry.getKey() + ", " + entry.getValue() + ") ";
-            }
-        }
-
         final String speech = result.getFulfillment().getSpeech();
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -259,9 +251,10 @@ public class ChatRoomActivity extends BaseActivity
                 mResponseTv.setText(speech);
             }
         });
-
-        Log.d("Query:", speech + "\nAction: " + result.getAction() + "\nParameters: " + parameterString);
         TTS.speak(speech);
+
+        //Parse and perform specific task
+        ChatBotResponseManager.manageRsposne(aiResponse);
     }
 
     @Override
