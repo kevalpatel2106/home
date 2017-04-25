@@ -11,10 +11,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.google.gson.JsonElement;
 import com.kevalpatel2106.home.BuildConfig;
@@ -44,11 +46,20 @@ public class ChatRoomActivity extends BaseActivity
         implements AIListener, TextWatcher {
     private static final int REQ_CODE_AUDIO_PERMISSION = 7872;
 
-    @BindView(R.id.mic_button)
-    FloatingActionButton mMicBtn;
+    @BindView(R.id.send_command_btn)
+    FloatingActionButton mSendCommandBtn;
 
     @BindView(R.id.et_command)
     AppCompatEditText mCommandEt;
+
+    @BindView(R.id.command_switcher)
+    ViewSwitcher mCommandBoxSwitcher;
+
+    @BindView(R.id.command_tv)
+    AppCompatTextView mCommandTv;
+
+    @BindView(R.id.response_tv)
+    AppCompatTextView mResponseTv;
 
     private boolean isListening = false;
     private boolean isProcessing = false;
@@ -59,11 +70,10 @@ public class ChatRoomActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatroom);
-        setNormalMic();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
                 == PackageManager.PERMISSION_GRANTED) {
-            initApiAiService();
+            init();
         } else {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.RECORD_AUDIO},
@@ -71,30 +81,39 @@ public class ChatRoomActivity extends BaseActivity
         }
     }
 
+    /**
+     * Set the normal mic button.
+     */
     private void setNormalMic() {
         isListening = false;
 
-        mMicBtn.setImageResource(R.drawable.ic_mic);
-        mMicBtn.setColorFilter(Color.rgb(255, 255, 255));
-        mMicBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat
+        if (mCommandBoxSwitcher.getDisplayedChild() == 1) mCommandBoxSwitcher.showNext();
+
+        mSendCommandBtn.setImageResource(R.drawable.ic_mic);
+        mSendCommandBtn.setColorFilter(Color.rgb(255, 255, 255));
+        mSendCommandBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat
                 .getColor(this, R.color.primary)));
     }
 
+    /**
+     * Set the send text command button.
+     */
     private void setSendBtn() {
         isListening = false;
-
-        mMicBtn.setImageResource(R.drawable.ic_send);
-        mMicBtn.setColorFilter(Color.rgb(255, 255, 255));
-        mMicBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat
-                .getColor(this, R.color.primary)));
+        mSendCommandBtn.setImageResource(R.drawable.ic_send);
     }
 
+    /**
+     * Set the recording button.
+     */
     private void setRecordingMic() {
         isListening = true;
 
-        mMicBtn.setImageResource(R.drawable.ic_mic);
-        mMicBtn.setColorFilter(Color.rgb(29, 102, 96));
-        mMicBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat
+        if (mCommandBoxSwitcher.getDisplayedChild() == 0) mCommandBoxSwitcher.showNext();
+
+        mSendCommandBtn.setImageResource(R.drawable.ic_mic);
+        mSendCommandBtn.setColorFilter(Color.rgb(29, 102, 96));
+        mSendCommandBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat
                 .getColor(this, android.R.color.holo_red_dark)));
     }
 
@@ -105,7 +124,7 @@ public class ChatRoomActivity extends BaseActivity
         switch (requestCode) {
             case REQ_CODE_AUDIO_PERMISSION:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    initApiAiService();
+                    init();
                 } else {
                     Toast.makeText(this,
                             R.string.error_chat_room_record_permission_not_available,
@@ -118,34 +137,47 @@ public class ChatRoomActivity extends BaseActivity
         }
     }
 
-    private void initApiAiService() {
+    /**
+     * Initialize the API.AI and TTS services. Set up the views.
+     */
+    private void init() {
+        //Initialize API.AI Service.
         final AIConfiguration config = new AIConfiguration(BuildConfig.api_ai_access_key,
                 AIConfiguration.SupportedLanguages.English,
                 AIConfiguration.RecognitionEngine.System);
-
         mAiService = AIService.getService(this, config);
         mAiService.setListener(this);
 
         mCommandEt.addTextChangedListener(this);
 
+        //Initialize the TTS
         TTS.init(this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        //Release TTS.
         TTS.release();
     }
 
-    @OnClick(R.id.mic_button)
-    void onMicClick() {
+    /**
+     * Whenever mic or send button clicks.
+     */
+    @OnClick(R.id.send_command_btn)
+    void onSendCommand() {
         if (isProcessing) return;
 
+        //If there is text in the command section, send it as text command.
         if (mCommandEt.getText().toString().trim().length() > 0) {
+
+            mCommandTv.setText(mCommandEt.getText().toString().trim());
+
+            //Create observer in Rx.
             final Observer<AIResponse> observer = new Observer<AIResponse>() {
                 @Override
                 public void onCompleted() {
-                    //Do nothing
+                    mCommandEt.setText("");
                 }
 
                 @Override
@@ -158,10 +190,13 @@ public class ChatRoomActivity extends BaseActivity
                     onResult(aiResponse);
                 }
             };
+
+            //Create observable in Rx.
             Observable<AIResponse> observable = Observable.create(new Observable.OnSubscribe<AIResponse>() {
                 @Override
                 public void call(Subscriber<? super AIResponse> subscriber) {
                     try {
+                        //Make api request
                         final AIRequest aiRequest = new AIRequest(mCommandEt.getText().toString().trim());
                         observer.onNext(mAiService.textRequest(aiRequest));
                     } catch (AIServiceException e) {
@@ -170,12 +205,14 @@ public class ChatRoomActivity extends BaseActivity
                     }
                 }
             });
+
             observable.subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(observer);
 
         } else if (!isListening) {
 
+            //Start recording the speech.
             if (SpeechRecognizer.isRecognitionAvailable(this)) {
                 mAiService.startListening();
             } else {
@@ -185,15 +222,26 @@ public class ChatRoomActivity extends BaseActivity
             }
         } else {
 
+            //Stop speech recognition.
             mAiService.stopListening();
         }
     }
 
+    private void reset() {
+        setNormalMic();
+        mResponseTv.setText("");
+        mCommandTv.setText("");
+    }
+
+    /**
+     * On API AI query is resolved, this method will be called.
+     *
+     * @param aiResponse API AI response.
+     */
     @Override
     public void onResult(AIResponse aiResponse) {
         isProcessing = false;
-
-        Result result = aiResponse.getResult();
+        final Result result = aiResponse.getResult();
 
         // Get parameters
         String parameterString = "";
@@ -203,8 +251,14 @@ public class ChatRoomActivity extends BaseActivity
             }
         }
 
-        // Show results in TextView.
         final String speech = result.getFulfillment().getSpeech();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mCommandTv.setText(result.getResolvedQuery());
+                mResponseTv.setText(speech);
+            }
+        });
 
         Log.d("Query:", speech + "\nAction: " + result.getAction() + "\nParameters: " + parameterString);
         TTS.speak(speech);
@@ -213,30 +267,34 @@ public class ChatRoomActivity extends BaseActivity
     @Override
     public void onError(AIError aiError) {
         isProcessing = false;
+
+        mCommandEt.setText("");
+        setNormalMic();
+
+        String speech = "Sorry, I did not understand what you were saying. Please say it again.";
+        TTS.speak(speech);
         Log.d("Query:", "Error occurred " + aiError.getMessage());
+
+        reset();
     }
 
     @Override
     public void onAudioLevel(float v) {
-
     }
 
     @Override
     public void onListeningStarted() {
-        Log.d("APIAI", "listen started");
         setRecordingMic();
     }
 
     @Override
     public void onListeningCanceled() {
-        Log.d("APIAI", "listen canceled");
         isProcessing = false;
         setNormalMic();
     }
 
     @Override
     public void onListeningFinished() {
-        Log.d("APIAI", "listen finished");
         setNormalMic();
     }
 
