@@ -1,9 +1,14 @@
 package com.kevalpatel2106.home;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 
 import com.google.gson.JsonElement;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Map;
 
 import ai.api.model.AIResponse;
@@ -16,7 +21,7 @@ import ai.api.model.Result;
 public class ChatBotResponseManager {
     private static final String INTENT_WEB_SEARCH = "web.search";
 
-    public static void manageRsposne(AIResponse aiResponse) {
+    public static void manageResponse(final Context context, AIResponse aiResponse) {
         final Result result = aiResponse.getResult();
 
         // Get parameters
@@ -33,7 +38,17 @@ public class ChatBotResponseManager {
 
         switch (result.getAction()) {
             case INTENT_WEB_SEARCH:
-                //TODO search on the internet
+                try {
+                    Thread.sleep(400);
+                    String searchUrl = "https://www.google.com/search?q="
+                            + URLEncoder.encode(result.getParameters().get("q").toString().replace("\"", ""), "UTF-8");
+
+                    final Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(searchUrl));
+                    context.startActivity(intent);
+                } catch (UnsupportedEncodingException | InterruptedException e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }

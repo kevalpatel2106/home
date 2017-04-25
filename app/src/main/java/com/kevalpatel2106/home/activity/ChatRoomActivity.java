@@ -169,6 +169,8 @@ public class ChatRoomActivity extends BaseActivity
         //If there is text in the command section, send it as text command.
         final String commandTxt = mCommandEt.getText().toString().trim();
         mCommandEt.setText("");
+        mResponseTv.setText("");
+        mCommandTv.setText("");
         if (commandTxt.length() > 0) {
 
             mCommandTv.setText(commandTxt);
@@ -254,7 +256,7 @@ public class ChatRoomActivity extends BaseActivity
         TTS.speak(speech);
 
         //Parse and perform specific task
-        ChatBotResponseManager.manageRsposne(aiResponse);
+        ChatBotResponseManager.manageResponse(this, aiResponse);
     }
 
     @Override
