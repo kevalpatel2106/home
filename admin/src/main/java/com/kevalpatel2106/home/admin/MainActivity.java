@@ -63,7 +63,7 @@ public class MainActivity extends BaseActivity {
      */
     private void getAllDevice() {
         addSubscription(RetrofitUtils.subscribe(
-                RetrofitUtils.getAdminApiService().getAllDevices(RetrofitUtils.getAuthString(this)),
+                RetrofitUtils.getAdminApiService().getAllDevicesAdmin(RetrofitUtils.getAuthString(this)),
                 new APIObserver<DeviceListData>() {
                     @Override
                     public void onError(String errorMessage, int statusCode) {
