@@ -36,6 +36,9 @@ public class LoginRequest {
     @SerializedName("gcmKey")
     @Expose
     private String gcmKey;
+    @SerializedName("deviceType")
+    @Expose
+    private String deviceType;
 
     public LoginRequest(Context context) {
         this.deviceId = Utils.getDeviceId(context);
@@ -43,5 +46,14 @@ public class LoginRequest {
 
     public void setGcmKey(String gcmKey) {
         this.gcmKey = gcmKey;
+    }
+
+    @Override
+    public String toString() {
+        return deviceId + " - " + gcmKey;
+    }
+
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
     }
 }

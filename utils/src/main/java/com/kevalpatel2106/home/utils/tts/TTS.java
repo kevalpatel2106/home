@@ -3,6 +3,8 @@ package com.kevalpatel2106.home.utils.tts;
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
 
+import java.util.Locale;
+
 /**
  * Created by Keval Patel on 25/04/17.
  *
@@ -11,24 +13,28 @@ import android.speech.tts.TextToSpeech;
 
 public class TTS {
 
-    private static TextToSpeech textToSpeech;
+    private static TextToSpeech mTTSEngine;
 
     public static void init(final Context context) {
-        if (textToSpeech == null) {
-            textToSpeech = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
+        if (mTTSEngine == null) {
+            mTTSEngine = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
                 @Override
                 public void onInit(int i) {
-
+                    if (i == TextToSpeech.SUCCESS) {
+                        mTTSEngine.setLanguage(Locale.US);
+                    } else {
+                        mTTSEngine = null;
+                    }
                 }
             });
         }
     }
 
     public static void release() {
-        if (textToSpeech != null) textToSpeech.shutdown();
+        if (mTTSEngine != null) mTTSEngine.shutdown();
     }
 
     public static void speak(final String text) {
-        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+        mTTSEngine.speak(text, TextToSpeech.QUEUE_FLUSH, null);
     }
 }

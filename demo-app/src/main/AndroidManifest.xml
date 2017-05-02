@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="com.kevalpatel2106.homedemo">
+          package="com.kevalpatel2106.home">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -19,7 +19,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
 
-        <activity android:name="com.kevalpatel2106.homedemo.MainActivity">
+        <activity android:name="com.kevalpatel2106.home.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -28,16 +28,16 @@
         </activity>
 
         <activity
-            android:name="com.kevalpatel2106.homedemo.ImageClassifierActivity"
+            android:name="com.kevalpatel2106.home.ImageClassifierActivity"
             android:configChanges="keyboard|orientation|screenSize|screenLayout"/>
 
         <activity
-            android:name="com.kevalpatel2106.homedemo.FaceDetectorActivity"
+            android:name="com.kevalpatel2106.home.FaceDetectorActivity"
             android:configChanges="keyboard|orientation|screenSize|screenLayout"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.kevalpatel2106.homedemo.fileprovider"
+            android:authorities="com.kevalpatel2106.home.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

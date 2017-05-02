@@ -2,7 +2,7 @@ ext {
     def supportLibVersion = "25.3.1";
     def espressoVersion = "2.2.2";
     def butterKnifeVersion = "8.4.0";
-    def playServiceVersion = "10.2.1";
+    def playServiceVersion = "10.0.0";
     def firebaseVersion = playServiceVersion;
 
     //library modules in the project

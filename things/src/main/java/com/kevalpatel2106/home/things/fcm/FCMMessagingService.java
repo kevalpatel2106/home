@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package com.kevalpatel2106.homedemo.things.fcm;
+package com.kevalpatel2106.home.things.fcm;
 
-import com.google.firebase.iid.FirebaseInstanceIdService;
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
 
 /**
  * Created by Keval on 08-Feb-17.
  *
  * @author {@link 'https://github.com/kevalpatel2106'}
  */
-public class FCMInstanceIDService extends FirebaseInstanceIdService {
+public class FCMMessagingService extends FirebaseMessagingService {
 
     @Override
-    public void onTokenRefresh() {
-        super.onTokenRefresh();
+    public void onMessageReceived(RemoteMessage remoteMessage) {
+        super.onMessageReceived(remoteMessage);
 
     }
 }

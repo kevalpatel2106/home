@@ -26,19 +26,20 @@
         <activity android:name=".activity.ChatRoomActivity"/>
         <activity android:name=".activity.LoginActivity"/>
 
-        <!--Firebase messaging service-->
+        <!-- Firebase messaging service -->
         <service android:name=".fcm.FCMMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
 
-        <!--Firebase instance id service-->
+        <!-- Firebase instance id service -->
         <service android:name=".fcm.FCMInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
+
     </application>
 
 </manifest>

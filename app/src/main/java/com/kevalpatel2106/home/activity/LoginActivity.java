@@ -58,7 +58,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     @OnClick(R.id.btn_authenticate_device)
-    void RegisterDevice() {
+    void registerDevice() {
 
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Authenticating device");

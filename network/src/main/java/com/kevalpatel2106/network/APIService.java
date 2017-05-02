@@ -38,7 +38,7 @@ import rx.Observable;
 
 @SuppressWarnings("WeakerAccess")
 public interface APIService {
-    String BASE_URL = "https://jarvis-2106.appspot.com/";
+    String BASE_URL = "http://jarvis-2106.appspot.com/";
     String ADMIN_BASE_URL = "http://admin.jarvis-2106.appspot.com/";
 
     //Login/Register apis

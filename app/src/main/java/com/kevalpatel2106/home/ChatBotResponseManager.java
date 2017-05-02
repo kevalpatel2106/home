@@ -3,6 +3,7 @@ package com.kevalpatel2106.home;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.gson.JsonElement;
@@ -20,8 +21,10 @@ import ai.api.model.Result;
 
 public class ChatBotResponseManager {
     private static final String INTENT_WEB_SEARCH = "web.search";
+    private static final String INTENT_INIT_A2DP = "init.a2dp";
 
-    public static void manageResponse(final Context context, AIResponse aiResponse) {
+    public static void manageResponse(@NonNull final Context context,
+                                      @NonNull AIResponse aiResponse) {
         final Result result = aiResponse.getResult();
 
         // Get parameters
@@ -49,6 +52,9 @@ public class ChatBotResponseManager {
                 } catch (UnsupportedEncodingException | InterruptedException e) {
                     e.printStackTrace();
                 }
+                break;
+            case INTENT_INIT_A2DP:
+
                 break;
         }
     }

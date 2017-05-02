@@ -1,4 +1,4 @@
-package com.kevalpatel2106.homedemo.things;
+package com.kevalpatel2106.home.things;
 
 import android.app.Application;
 
