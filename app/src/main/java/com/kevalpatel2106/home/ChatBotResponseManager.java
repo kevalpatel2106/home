@@ -5,8 +5,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.JsonElement;
+import com.kevalpatel2106.network.APIObserver;
+import com.kevalpatel2106.network.RetrofitUtils;
+import com.kevalpatel2106.network.responsePojo.base.Status;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -20,6 +24,8 @@ import ai.api.model.Result;
  */
 
 public class ChatBotResponseManager {
+    private static final String TAG = ChatBotResponseManager.class.getSimpleName();
+
     private static final String INTENT_WEB_SEARCH = "web.search";
     private static final String INTENT_INIT_A2DP = "init.a2dp";
 
@@ -54,7 +60,19 @@ public class ChatBotResponseManager {
                 }
                 break;
             case INTENT_INIT_A2DP:
+                RetrofitUtils.subscribe(RetrofitUtils.getApiService().initA2DP(RetrofitUtils.getAuthString(context)),
+                        new APIObserver<Status>() {
+                            @Override
+                            public void onError(String errorMessage, int statusCode) {
+                                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, errorMessage);
+                            }
 
+                            @Override
+                            public void onSuccess(Status status) {
+                                //Do nothing
+                            }
+                        });
                 break;
         }
     }

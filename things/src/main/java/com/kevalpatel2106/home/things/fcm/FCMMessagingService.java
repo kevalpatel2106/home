@@ -16,6 +16,8 @@
 
 package com.kevalpatel2106.home.things.fcm;
 
+import android.util.Log;
+
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -26,9 +28,12 @@ import com.google.firebase.messaging.RemoteMessage;
  */
 public class FCMMessagingService extends FirebaseMessagingService {
 
+    private static final String TAG = FCMMessagingService.class.getSimpleName();
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
+        Log.d(TAG, "onMessageReceived: " + remoteMessage.getData().toString());
     }
 }
