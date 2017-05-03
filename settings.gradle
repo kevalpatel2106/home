@@ -1,7 +1,6 @@
-include ':demo-app', ':utils',
+include ':utils',
         ':admin',
         ':network',
         ':app',
         ':things',
-        ':tensorflow-android-inference',
-        ':dlib-android-interface'
+        ':tensorflow-android-inference'

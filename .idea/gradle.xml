@@ -10,8 +10,6 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/admin" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/demo-app" />
-            <option value="$PROJECT_DIR$/dlib-android-interface" />
             <option value="$PROJECT_DIR$/network" />
             <option value="$PROJECT_DIR$/tensorflow-android-inference" />
             <option value="$PROJECT_DIR$/things" />

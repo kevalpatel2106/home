@@ -19,7 +19,6 @@ ext {
             app                : 'com.kevalpatel2106.home',
             things             : 'com.kevalpatel2106.home.things',
             tensorflowInterface: 'com.kevalpatel2106.tensorflow',
-            demoApp            : 'com.kevalpatel2106.homedemo',
             admin              : 'com.kevalpatel2106.home.admin',
             utils              : 'com.kevalpatel2106.home.utils',
     ]
