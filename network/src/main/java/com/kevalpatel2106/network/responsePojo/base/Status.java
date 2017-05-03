@@ -29,6 +29,7 @@ public final class Status {
     @SerializedName("c")
     @Expose
     private Integer c;
+
     @SerializedName("m")
     @Expose
     private String m;

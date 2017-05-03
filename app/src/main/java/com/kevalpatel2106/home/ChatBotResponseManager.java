@@ -10,7 +10,7 @@ import android.widget.Toast;
 import com.google.gson.JsonElement;
 import com.kevalpatel2106.network.APIObserver;
 import com.kevalpatel2106.network.RetrofitUtils;
-import com.kevalpatel2106.network.responsePojo.base.Status;
+import com.kevalpatel2106.network.responsePojo.PlainResponseData;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -61,7 +61,7 @@ public class ChatBotResponseManager {
                 break;
             case INTENT_INIT_A2DP:
                 RetrofitUtils.subscribe(RetrofitUtils.getApiService().initA2DP(RetrofitUtils.getAuthString(context)),
-                        new APIObserver<Status>() {
+                        new APIObserver<PlainResponseData>() {
                             @Override
                             public void onError(String errorMessage, int statusCode) {
                                 Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
@@ -69,7 +69,7 @@ public class ChatBotResponseManager {
                             }
 
                             @Override
-                            public void onSuccess(Status status) {
+                            public void onSuccess(PlainResponseData responseData) {
                                 //Do nothing
                             }
                         });
