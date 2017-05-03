@@ -30,6 +30,7 @@ public class ChatBotResponseManager {
 
     private static final String INTENT_WEB_SEARCH = "web.search";
     private static final String INTENT_INIT_A2DP = "turnon.bluetooth";
+    private static final String INTENT_PLAY_A2DP = "play.a2dp";
     private static final String INTENT_DISCONNECT_A2DP = "turnoff.bluetooth";
 
     public static void manageResponse(@NonNull final Context context,
@@ -64,8 +65,9 @@ public class ChatBotResponseManager {
                 break;
             case INTENT_INIT_A2DP:
             case INTENT_DISCONNECT_A2DP:
+            case INTENT_PLAY_A2DP:
                 ControlBluetoothRequest bluetoothRequest = new ControlBluetoothRequest();
-                bluetoothRequest.setConnect(result.getAction().equals(INTENT_INIT_A2DP));
+                bluetoothRequest.setConnect(!result.getAction().equals(INTENT_DISCONNECT_A2DP));
                 RetrofitUtils.subscribe(RetrofitUtils.getApiService().controlBluetooth(RetrofitUtils.getAuthString(context), bluetoothRequest),
                         new APIObserver<PlainResponseData>() {
                             @Override
@@ -77,7 +79,8 @@ public class ChatBotResponseManager {
                             @Override
                             public void onSuccess(PlainResponseData responseData) {
                                 //Enable Disable bluetooth
-//                                changeBluetoothState(result.getAction().equals(INTENT_INIT_A2DP));
+                                if (result.getAction().equals(INTENT_PLAY_A2DP))
+                                    changeBluetoothState(true);
                             }
                         });
                 break;
