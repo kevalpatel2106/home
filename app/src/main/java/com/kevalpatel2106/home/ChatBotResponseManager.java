@@ -1,5 +1,6 @@
 package com.kevalpatel2106.home;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 import com.google.gson.JsonElement;
 import com.kevalpatel2106.network.APIObserver;
 import com.kevalpatel2106.network.RetrofitUtils;
+import com.kevalpatel2106.network.requestPojo.ControlBluetoothRequest;
 import com.kevalpatel2106.network.responsePojo.PlainResponseData;
 
 import java.io.UnsupportedEncodingException;
@@ -27,7 +29,8 @@ public class ChatBotResponseManager {
     private static final String TAG = ChatBotResponseManager.class.getSimpleName();
 
     private static final String INTENT_WEB_SEARCH = "web.search";
-    private static final String INTENT_INIT_A2DP = "init.a2dp";
+    private static final String INTENT_INIT_A2DP = "turnon.bluetooth";
+    private static final String INTENT_DISCONNECT_A2DP = "turnoff.bluetooth";
 
     public static void manageResponse(@NonNull final Context context,
                                       @NonNull AIResponse aiResponse) {
@@ -60,7 +63,10 @@ public class ChatBotResponseManager {
                 }
                 break;
             case INTENT_INIT_A2DP:
-                RetrofitUtils.subscribe(RetrofitUtils.getApiService().initA2DP(RetrofitUtils.getAuthString(context)),
+            case INTENT_DISCONNECT_A2DP:
+                ControlBluetoothRequest bluetoothRequest = new ControlBluetoothRequest();
+                bluetoothRequest.setConnect(result.getAction().equals(INTENT_INIT_A2DP));
+                RetrofitUtils.subscribe(RetrofitUtils.getApiService().controlBluetooth(RetrofitUtils.getAuthString(context), bluetoothRequest),
                         new APIObserver<PlainResponseData>() {
                             @Override
                             public void onError(String errorMessage, int statusCode) {
@@ -70,10 +76,20 @@ public class ChatBotResponseManager {
 
                             @Override
                             public void onSuccess(PlainResponseData responseData) {
-                                //Do nothing
+                                //Enable Disable bluetooth
+//                                changeBluetoothState(result.getAction().equals(INTENT_INIT_A2DP));
                             }
                         });
                 break;
+        }
+    }
+
+    private static void changeBluetoothState(boolean isEnable) {
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (!isEnable && mBluetoothAdapter.isEnabled()) {
+            mBluetoothAdapter.disable();
+        } else if (isEnable && !mBluetoothAdapter.isEnabled()) {
+            mBluetoothAdapter.enable();
         }
     }
 }

@@ -23,4 +23,5 @@ public class SplashActivity extends BaseActivity {
                 new Intent(this, ChatRoomActivity.class) :
                 new Intent(this, LoginActivity.class));
     }
+
 }

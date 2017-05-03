@@ -36,7 +36,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.A2DPSinkActivity"/>
+        <service
+            android:name=".bluetooth.A2DPSinkService"
+            android:exported="false"/>
 
         <!--Firebase messaging service-->
         <service

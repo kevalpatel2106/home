@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.kevalpatel2106.home.things.activity;
+package com.kevalpatel2106.home.things.bluetooth;
 
-import android.app.Activity;
+import android.app.Notification;
+import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothProfile;
@@ -24,10 +25,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Bundle;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.kevalpatel2106.home.things.helper.A2dpSinkHelper;
+import com.kevalpatel2106.home.things.R;
 import com.kevalpatel2106.home.utils.tts.TTS;
 
 import java.util.Objects;
@@ -40,12 +42,17 @@ import java.util.Objects;
  * way to block specific pairing attempts while in pairing mode. This is known limitation that is
  * being worked on.
  */
-public class A2DPSinkActivity extends Activity {
-    private static final String TAG = "A2DPSinkActivity";
+public class A2DPSinkService extends Service {
+    private static final int TURN_OFF_BT = 892;
+    private static final int TURN_ON_BT = 122;
+    private static final String ARG_BT_STATE = "bt_state";
 
+    private static final String TAG = A2DPSinkService.class.getSimpleName();
     private static final String ADAPTER_FRIENDLY_NAME = "JarvisBT";
+
+    private static final int FOREGROUND_NOTIFICATION_ID = 123;
     private static final int DISCOVERABLE_TIMEOUT_MS = 300;
-    private static final int REQUEST_CODE_ENABLE_DISCOVERABLE = 100;
+
     /**
      * Handle an intent that is broadcast by the Bluetooth A2DP sink profile whenever a device
      * connects or disconnects to it.
@@ -56,14 +63,12 @@ public class A2DPSinkActivity extends Activity {
     private final BroadcastReceiver mSinkProfileStateChangeReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(A2dpSinkHelper.ACTION_CONNECTION_STATE_CHANGED)) {
-                int oldState = A2dpSinkHelper.getPreviousProfileState(intent);
-                int newState = A2dpSinkHelper.getCurrentProfileState(intent);
-
                 BluetoothDevice device = A2dpSinkHelper.getDevice(intent);
-                Log.d(TAG, "Bluetooth A2DP sink changing connection state from " + oldState +
-                        " to " + newState + " device " + device);
                 if (device != null) {
+
                     String deviceName = Objects.toString(device.getName(), "a device");
+                    int newState = A2dpSinkHelper.getCurrentProfileState(intent);
+
                     if (newState == BluetoothProfile.STATE_CONNECTED) {
                         TTS.speak("Connected to " + deviceName);
                     } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
@@ -73,6 +78,7 @@ public class A2DPSinkActivity extends Activity {
             }
         }
     };
+
     /**
      * Handle an intent that is broadcast by the Bluetooth A2DP sink profile whenever a device
      * starts or stops playing through the A2DP sink.
@@ -83,13 +89,10 @@ public class A2DPSinkActivity extends Activity {
     private final BroadcastReceiver mSinkProfilePlaybackChangeReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(A2dpSinkHelper.ACTION_PLAYING_STATE_CHANGED)) {
-                int oldState = A2dpSinkHelper.getPreviousProfileState(intent);
-                int newState = A2dpSinkHelper.getCurrentProfileState(intent);
-
                 BluetoothDevice device = A2dpSinkHelper.getDevice(intent);
-                Log.d(TAG, "Bluetooth A2DP sink changing playback state from " + oldState +
-                        " to " + newState + " device " + device);
                 if (device != null) {
+
+                    int newState = A2dpSinkHelper.getCurrentProfileState(intent);
                     if (newState == A2dpSinkHelper.STATE_PLAYING) {
                         Log.i(TAG, "Playing audio from device " + device.getAddress());
                     } else if (newState == A2dpSinkHelper.STATE_NOT_PLAYING) {
@@ -99,8 +102,10 @@ public class A2DPSinkActivity extends Activity {
             }
         }
     };
+
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothProfile mA2DPSinkProxy;
+
     /**
      * Handle an intent that is broadcast by the Bluetooth adapter whenever it changes its
      * state (after calling enable(), for example).
@@ -109,9 +114,7 @@ public class A2DPSinkActivity extends Activity {
      */
     private final BroadcastReceiver mAdapterStateChangeReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
-            int oldState = A2dpSinkHelper.getPreviousAdapterState(intent);
             int newState = A2dpSinkHelper.getCurrentAdapterState(intent);
-            Log.d(TAG, "Bluetooth Adapter changing state from " + oldState + " to " + newState);
             if (newState == BluetoothAdapter.STATE_ON) {
                 Log.i(TAG, "Bluetooth Adapter is ready");
                 initA2DPSink();
@@ -119,9 +122,21 @@ public class A2DPSinkActivity extends Activity {
         }
     };
 
+    public static void startBluetoothA2DP(Context context) {
+        Intent intent = new Intent(context, A2DPSinkService.class);
+        intent.putExtra(A2DPSinkService.ARG_BT_STATE, A2DPSinkService.TURN_ON_BT);
+        context.startService(intent);
+    }
+
+    public static void stopBluetoothA2DP(Context context) {
+        Intent intent = new Intent(context, A2DPSinkService.class);
+        intent.putExtra(A2DPSinkService.ARG_BT_STATE, A2DPSinkService.TURN_OFF_BT);
+        context.startService(intent);
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        super.onCreate();
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
@@ -141,30 +156,75 @@ public class A2DPSinkActivity extends Activity {
             Log.d(TAG, "Bluetooth Adapter is already enabled.");
             initA2DPSink();
         } else {
-            Log.d(TAG, "Bluetooth adapter not enabled. Enabling.");
+            Log.d(TAG, "Bluetooth adapter not enabled. Enabling...");
             mBluetoothAdapter.enable();
         }
 
-        enableDiscoverable();
+        makeForeground();
+    }
+
+    private void makeForeground() {
+        Notification notification = new Notification.Builder(this)
+                .setContentTitle("Playing music")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .build();
+        startForeground(FOREGROUND_NOTIFICATION_ID, notification);
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        switch (intent.getIntExtra(ARG_BT_STATE, -1)) {
+            case TURN_ON_BT:
+                enableDiscoverable();
+                break;
+            case TURN_OFF_BT:
+                stopForeground(true);
+                stopSelf();
+                break;
+            default:
+                stopSelf();
+                break;
+        }
+        return START_NOT_STICKY;
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        killService();
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        super.onTaskRemoved(rootIntent);
+        killService();
+    }
+
+    /**
+     * Release all the resources before killing the service.
+     */
+    private void killService() {
+        TTS.speak("Turning off bluetooth.");
+
+        //Unregister all the receiver.
         unregisterReceiver(mAdapterStateChangeReceiver);
         unregisterReceiver(mSinkProfileStateChangeReceiver);
         unregisterReceiver(mSinkProfilePlaybackChangeReceiver);
 
         if (mA2DPSinkProxy != null) {
-            mBluetoothAdapter.closeProfileProxy(A2dpSinkHelper.A2DP_SINK_PROFILE,
-                    mA2DPSinkProxy);
+            disconnectConnectedDevices();
+            mBluetoothAdapter.closeProfileProxy(A2dpSinkHelper.A2DP_SINK_PROFILE, mA2DPSinkProxy);
+            mBluetoothAdapter.disable();
         }
 
+        //Release the TTS
         TTS.release();
+    }
 
-        // we intentionally leave the Bluetooth adapter enabled, so that other samples can use it
-        // without having to initialize it.
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
     /**
@@ -176,8 +236,9 @@ public class A2DPSinkActivity extends Activity {
             return;
         }
 
-        mBluetoothAdapter.setName(ADAPTER_FRIENDLY_NAME);
+        mBluetoothAdapter.setName(ADAPTER_FRIENDLY_NAME);   //Set the name of the bluetooth adapter
         mBluetoothAdapter.getProfileProxy(this, new BluetoothProfile.ServiceListener() {
+
             @Override
             public void onServiceConnected(int profile, BluetoothProfile proxy) {
                 mA2DPSinkProxy = proxy;
@@ -195,52 +256,21 @@ public class A2DPSinkActivity extends Activity {
      * the next {@link #DISCOVERABLE_TIMEOUT_MS} ms.
      */
     private void enableDiscoverable() {
-        Log.d(TAG, "Registering for discovery.");
-        Intent discoverableIntent =
-                new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION,
-                DISCOVERABLE_TIMEOUT_MS);
-        startActivityForResult(discoverableIntent, REQUEST_CODE_ENABLE_DISCOVERABLE);
+        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, DISCOVERABLE_TIMEOUT_MS);
+        startActivity(discoverableIntent);
+
+        TTS.speak("Bluetooth audio sink is discoverable for " + DISCOVERABLE_TIMEOUT_MS +
+                " milliseconds. Look for a device named " + ADAPTER_FRIENDLY_NAME);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_ENABLE_DISCOVERABLE) {
-            Log.d(TAG, "Enable discoverable returned with result " + resultCode);
-
-            // ResultCode, as described in BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE, is either
-            // RESULT_CANCELED or the number of milliseconds that the device will stay in
-            // discoverable mode. In a regular Android device, the user will see a popup requesting
-            // authorization, and if they cancel, RESULT_CANCELED is returned. In Android Things,
-            // on the other hand, the authorization for pairing is always given without user
-            // interference, so RESULT_CANCELED should never be returned.
-            if (resultCode == RESULT_CANCELED) {
-                Log.e(TAG, "Enable discoverable has been cancelled by the user. " +
-                        "This should never happen in an Android Things device.");
-                return;
-            }
-
-            Log.i(TAG, "Bluetooth adapter successfully set to discoverable mode. " +
-                    "Any A2DP source can find it with the name " + ADAPTER_FRIENDLY_NAME +
-                    " and pair for the next " + DISCOVERABLE_TIMEOUT_MS + " ms. " +
-                    "Try looking for it on your phone, for example.");
-
-            // There is nothing else required here, since Android framework automatically handles
-            // A2DP Sink. Most relevant Bluetooth events, like connection/disconnection, will
-            // generate corresponding broadcast intents or profile proxy events that you can
-            // listen to and react appropriately.
-
-            TTS.speak("Bluetooth audio sink is discoverable for " + DISCOVERABLE_TIMEOUT_MS +
-                    " milliseconds. Look for a device named " + ADAPTER_FRIENDLY_NAME);
-        }
-    }
-
+    /**
+     * Disconnect all the connected devices.
+     */
     private void disconnectConnectedDevices() {
         if (mA2DPSinkProxy == null || mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
             return;
         }
-        TTS.speak("Disconnecting devices");
         for (BluetoothDevice device : mA2DPSinkProxy.getConnectedDevices()) {
             Log.i(TAG, "Disconnecting device " + device);
             A2dpSinkHelper.disconnect(mA2DPSinkProxy, device);

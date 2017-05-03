@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.kevalpatel2106.home.things.bluetooth.A2DPSinkService;
 import com.kevalpatel2106.home.utils.cons.DeviceType;
 import com.kevalpatel2106.home.utils.managers.DeviceSessionManager;
 import com.kevalpatel2106.network.APIObserver;
@@ -22,8 +23,14 @@ public class MainActivity extends AppCompatActivity {
 
         //register the device if already not registered
         if (!new DeviceSessionManager(this).isDeviceRegistered()) registerGcm();
+
+        //start the bluetooth A2DP service.
+        A2DPSinkService.startBluetoothA2DP(this);
     }
 
+    /**
+     * Register and get the authentication token if the device is not connected already.
+     */
     void registerGcm() {
         FirebaseApp.initializeApp(this);
 

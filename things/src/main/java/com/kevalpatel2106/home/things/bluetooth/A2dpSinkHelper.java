@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kevalpatel2106.home.things.helper;
+package com.kevalpatel2106.home.things.bluetooth;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -92,7 +92,7 @@ public final class A2dpSinkHelper {
      * {@link #ACTION_PLAYING_STATE_CHANGED} intent.
      */
     public static final int STATE_NOT_PLAYING = 11;
-    private static final String TAG = "A2DPSinkHelper";
+    private static final String TAG = A2dpSinkHelper.class.getSimpleName();
 
     public static int getPreviousAdapterState(Intent intent) {
         return intent.getIntExtra(BluetoothAdapter.EXTRA_PREVIOUS_STATE, -1);
@@ -125,6 +125,8 @@ public final class A2dpSinkHelper {
      */
     public static boolean disconnect(BluetoothProfile profile, BluetoothDevice device) {
         try {
+
+            //Reflation
             Method m = profile.getClass().getMethod("disconnect", BluetoothDevice.class);
             m.invoke(profile, device);
             return true;
@@ -139,4 +141,18 @@ public final class A2dpSinkHelper {
         }
     }
 
+    public static boolean unpairDevice(BluetoothDevice pairedDevices) {
+        try {
+            Method m = pairedDevices.getClass().getMethod("removeBond", (Class[]) null);
+            m.invoke(pairedDevices, (Object[]) null);
+            return true;
+        } catch (NoSuchMethodException e) {
+            Log.w(TAG, "No disconnect method in the " + pairedDevices.getClass().getName() +
+                    " class, ignoring request.");
+            return false;
+        } catch (Exception e) {
+            Log.e("Removing failed.", e.getMessage());
+            return false;
+        }
+    }
 }

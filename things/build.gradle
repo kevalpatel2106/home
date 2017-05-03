@@ -108,7 +108,6 @@ dependencies {
     //Android things dependency
     provided androidThingsLib.things
 
-    compile project(projectModule.tensorflowInterface)
     compile project(projectModule.network)
     compile project(projectModule.utils)
 

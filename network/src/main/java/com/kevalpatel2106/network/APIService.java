@@ -16,6 +16,7 @@
 
 package com.kevalpatel2106.network;
 
+import com.kevalpatel2106.network.requestPojo.ControlBluetoothRequest;
 import com.kevalpatel2106.network.requestPojo.DeleteDeviceRequest;
 import com.kevalpatel2106.network.requestPojo.DeviceRegisterRequest;
 import com.kevalpatel2106.network.requestPojo.LoginRequest;
@@ -60,6 +61,7 @@ public interface APIService {
     @POST("getAllDevicesAdmin")
     Observable<BaseResponse<DeviceListData>> getAllDevices(@Header("Authorization") String authorization);
 
-    @POST("initA2DP")
-    Observable<BaseResponse<PlainResponseData>> initA2DP(@Header("Authorization") String authorization);
+    @POST("controlBluetooth")
+    Observable<BaseResponse<PlainResponseData>> controlBluetooth(@Header("Authorization") String authorization,
+                                                                 @Body ControlBluetoothRequest request);
 }
