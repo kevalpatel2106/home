@@ -14,26 +14,26 @@ import com.kevalpatel2106.network.RetrofitUtils;
 import com.kevalpatel2106.network.requestPojo.LoginRequest;
 import com.kevalpatel2106.network.responsePojo.LoginResponseData;
 
-public class MainActivity extends AppCompatActivity {
-    private static final String TAG = MainActivity.class.getSimpleName();
+public class LaunchActivity extends AppCompatActivity {
+    private static final String TAG = LaunchActivity.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //register the device if already not registered
+        FirebaseApp.initializeApp(this);
         if (!new DeviceSessionManager(this).isDeviceRegistered()) registerGcm();
 
         //start the bluetooth A2DP service.
         A2DPSinkService.startBluetoothA2DP(this);
+
     }
 
     /**
      * Register and get the authentication token if the device is not connected already.
      */
     void registerGcm() {
-        FirebaseApp.initializeApp(this);
-
         LoginRequest request = new LoginRequest(this);
         request.setDeviceType(DeviceType.PIE);
         request.setGcmKey(FirebaseInstanceId.getInstance().getToken());
@@ -48,9 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onSuccess(LoginResponseData loginResponseData) {
-                        new DeviceSessionManager(MainActivity.this)
+                        new DeviceSessionManager(LaunchActivity.this)
                                 .setNewSession(loginResponseData.getDeviceId(), loginResponseData.getToken());
-
                         Log.d(TAG, "GCM registered successfully.");
                     }
                 });
