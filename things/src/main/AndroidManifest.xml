@@ -36,6 +36,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activity.A2DPSinkActivity"/>
+
         <!--Firebase messaging service-->
         <service
             android:name=".fcm.FCMMessagingService"

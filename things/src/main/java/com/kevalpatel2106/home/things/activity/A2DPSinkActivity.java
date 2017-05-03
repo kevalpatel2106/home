@@ -144,6 +144,8 @@ public class A2DPSinkActivity extends Activity {
             Log.d(TAG, "Bluetooth adapter not enabled. Enabling.");
             mBluetoothAdapter.enable();
         }
+
+        enableDiscoverable();
     }
 
     @Override
