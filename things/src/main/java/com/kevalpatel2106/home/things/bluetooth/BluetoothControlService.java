@@ -30,7 +30,6 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.kevalpatel2106.home.things.R;
-import com.kevalpatel2106.home.utils.cons.BluetoothStates;
 import com.kevalpatel2106.home.utils.tts.TTS;
 
 import java.util.Objects;
@@ -44,6 +43,9 @@ import java.util.Objects;
  * being worked on.
  */
 public class BluetoothControlService extends Service {
+    private static final int STATE_TURN_ON = 1;
+    private static final int STATE_TURN_OFF = 2;
+    private static final int STATE_TURN_DISCONNECT_ALL = 3;
     private static final String ARG_BT_STATE = "bt_state";
 
     private static final String TAG = BluetoothControlService.class.getSimpleName();
@@ -123,19 +125,19 @@ public class BluetoothControlService extends Service {
 
     public static void turnOnBluetooth(Context context) {
         Intent intent = new Intent(context, BluetoothControlService.class);
-        intent.putExtra(BluetoothControlService.ARG_BT_STATE, BluetoothStates.STATE_TURN_ON);
+        intent.putExtra(BluetoothControlService.ARG_BT_STATE, STATE_TURN_ON);
         context.startService(intent);
     }
 
     public static void disconnectBluetooth(Context context) {
         Intent intent = new Intent(context, BluetoothControlService.class);
-        intent.putExtra(BluetoothControlService.ARG_BT_STATE, BluetoothStates.STATE_TURN_DISCONNECT_ALL);
+        intent.putExtra(BluetoothControlService.ARG_BT_STATE, STATE_TURN_DISCONNECT_ALL);
         context.startService(intent);
     }
 
     public static void turnOffBluetooth(Context context) {
         Intent intent = new Intent(context, BluetoothControlService.class);
-        intent.putExtra(BluetoothControlService.ARG_BT_STATE, BluetoothStates.STATE_TURN_OFF);
+        intent.putExtra(BluetoothControlService.ARG_BT_STATE, STATE_TURN_OFF);
         context.startService(intent);
     }
 
@@ -179,14 +181,14 @@ public class BluetoothControlService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         switch (intent.getIntExtra(ARG_BT_STATE, -1)) {
-            case BluetoothStates.STATE_TURN_ON:
+            case STATE_TURN_ON:
                 enableDiscoverable();
                 break;
-            case BluetoothStates.STATE_TURN_DISCONNECT_ALL:
+            case STATE_TURN_DISCONNECT_ALL:
                 TTS.speak("All devices disconnected.");
                 disconnectConnectedDevices();
                 break;
-            case BluetoothStates.STATE_TURN_OFF:
+            case STATE_TURN_OFF:
                 TTS.speak("Turning off bluetooth.");
                 stopForeground(true);
                 stopSelf();
