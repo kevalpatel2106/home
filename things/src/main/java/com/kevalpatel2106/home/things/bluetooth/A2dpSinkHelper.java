@@ -32,7 +32,7 @@ import java.lang.reflect.Method;
  * {@link android.bluetooth} package, since they are hidden from the public Android API and cannot
  * be directly used.
  */
-public final class A2dpSinkHelper {
+final class A2dpSinkHelper {
 
     /**
      * Profile number for A2DP_SINK profile.

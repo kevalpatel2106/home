@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.gson.JsonElement;
 import com.kevalpatel2106.home.things.bluetooth.BluetoothControlService;
+import com.kevalpatel2106.home.utils.tts.TTS;
 
 import java.util.Map;
 
@@ -27,6 +28,8 @@ class ApiAiResponseManager {
     static void manageResponse(@NonNull final Context context,
                                @NonNull AIResponse aiResponse) {
         final Result result = aiResponse.getResult();
+        final String speech = result.getFulfillment().getSpeech();
+        TTS.speak(context, speech);
 
         // Get parameters
         String parameterString = "";

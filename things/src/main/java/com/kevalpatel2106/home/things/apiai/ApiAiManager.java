@@ -12,7 +12,6 @@ import ai.api.android.AIService;
 import ai.api.model.AIError;
 import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
-import ai.api.model.Result;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
@@ -81,10 +80,6 @@ public class ApiAiManager implements AIListener {
 
     @Override
     public void onResult(AIResponse aiResponse) {
-        final Result result = aiResponse.getResult();
-        final String speech = result.getFulfillment().getSpeech();
-        TTS.speak(speech);
-
         //Parse and perform specific task
         ApiAiResponseManager.manageResponse(mContext, aiResponse);
     }
@@ -92,7 +87,7 @@ public class ApiAiManager implements AIListener {
     @Override
     public void onError(AIError aiError) {
         String speech = "Sorry, I did not understand what you were saying. Please say it again.";
-        TTS.speak(speech);
+        TTS.speak(mContext, speech);
     }
 
     @Override

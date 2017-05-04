@@ -20,26 +20,6 @@ public class TTS {
     private static TextToSpeech mTTSEngine;
 
     /**
-     * Initialize TTS engine if already not initialized.
-     *
-     * @param context instance of the caller.
-     */
-    public static void init(final Context context) {
-        if (mTTSEngine == null) {
-            mTTSEngine = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
-                @Override
-                public void onInit(int i) {
-                    if (i == TextToSpeech.SUCCESS) {
-                        mTTSEngine.setLanguage(Locale.US);
-                    } else {
-                        mTTSEngine = null;
-                    }
-                }
-            });
-        }
-    }
-
-    /**
      * Stop current utterance and flush the TTS queue.
      */
     public static void flush() {
@@ -47,23 +27,29 @@ public class TTS {
     }
 
     /**
-     * Release and shutdown TTS engine. This should happen only when application is destroyed.
-     */
-    public static void release() {
-        if (mTTSEngine != null) {
-            mTTSEngine.stop();
-            mTTSEngine.shutdown();
-            mTTSEngine = null;
-        }
-    }
-
-    /**
      * Pass the text and let TTS speak.
      *
      * @param text text to speak
      */
-    public static void speak(final String text) {
+    public static void speak(Context context, final String text) {
         Log.d(TAG, "Speak : " + text);
-        mTTSEngine.speak(text, TextToSpeech.QUEUE_ADD, null, UTTERANCE_ID);
+        if (mTTSEngine == null) {
+            mTTSEngine = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
+                @Override
+                public void onInit(int i) {
+                    if (i == TextToSpeech.SUCCESS) {
+                        mTTSEngine.setLanguage(Locale.US);
+                        mTTSEngine.setPitch(1f);
+                        mTTSEngine.setSpeechRate(1f);
+
+                        mTTSEngine.speak(text, TextToSpeech.QUEUE_ADD, null, UTTERANCE_ID);
+                    } else {
+                        mTTSEngine = null;
+                    }
+                }
+            });
+        } else {
+            mTTSEngine.speak(text, TextToSpeech.QUEUE_ADD, null, UTTERANCE_ID);
+        }
     }
 }

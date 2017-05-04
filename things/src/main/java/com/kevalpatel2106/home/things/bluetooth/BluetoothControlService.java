@@ -71,9 +71,9 @@ public class BluetoothControlService extends Service {
                     int newState = A2dpSinkHelper.getCurrentProfileState(intent);
 
                     if (newState == BluetoothProfile.STATE_CONNECTED) {
-                        TTS.speak("Connected to " + deviceName);
+                        TTS.speak(BluetoothControlService.this, "Connected to " + deviceName);
                     } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                        TTS.speak("Disconnected from " + deviceName);
+                        TTS.speak(BluetoothControlService.this, "Disconnected from " + deviceName);
                     }
                 }
             }
@@ -151,9 +151,6 @@ public class BluetoothControlService extends Service {
             return;
         }
 
-        // We use Text-to-Speech to indicate status change to the user
-        TTS.init(this);
-
         //Register receivers
         registerReceiver(mAdapterStateChangeReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
         registerReceiver(mSinkProfileStateChangeReceiver, new IntentFilter(A2dpSinkHelper.ACTION_CONNECTION_STATE_CHANGED));
@@ -185,11 +182,9 @@ public class BluetoothControlService extends Service {
                 enableDiscoverable();
                 break;
             case STATE_TURN_DISCONNECT_ALL:
-                TTS.speak("All devices disconnected.");
                 disconnectConnectedDevices();
                 break;
             case STATE_TURN_OFF:
-                TTS.speak("Turning off bluetooth.");
                 stopForeground(true);
                 stopSelf();
                 break;
@@ -266,9 +261,6 @@ public class BluetoothControlService extends Service {
         Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
         discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, DISCOVERABLE_TIMEOUT_SEC);
         startActivity(discoverableIntent);
-
-        TTS.speak("Bluetooth is discoverable for " + DISCOVERABLE_TIMEOUT_SEC +
-                " seconds. Look for a device named " + ADAPTER_FRIENDLY_NAME);
     }
 
     /**

@@ -12,7 +12,6 @@ import com.kevalpatel2106.home.things.bluetooth.BluetoothControlService;
 import com.kevalpatel2106.home.things.timeReminder.TimeReminderReceiver;
 import com.kevalpatel2106.home.utils.cons.DeviceType;
 import com.kevalpatel2106.home.utils.managers.DeviceSessionManager;
-import com.kevalpatel2106.home.utils.tts.TTS;
 import com.kevalpatel2106.network.APIObserver;
 import com.kevalpatel2106.network.RetrofitUtils;
 import com.kevalpatel2106.network.requestPojo.LoginRequest;
@@ -36,14 +35,6 @@ public class LaunchActivity extends AppCompatActivity {
 
         //register for hourly reminder
         TimeReminderReceiver.registerReceiver(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        //Only release TTS here.
-        TTS.release();
     }
 
     /**

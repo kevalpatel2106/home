@@ -58,13 +58,12 @@ public class TimeReminderReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        TTS.init(context);
         Log.d(TAG, "onReceive: Time reminder receiver.");
 
         //Speak
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
         calendar.setTimeZone(TimeZone.getTimeZone("Asia/Calcutta"));
-        TTS.speak("It\'s " + calendar.get(Calendar.HOUR) + " o clock");
+        TTS.speak(context, "It\'s " + calendar.get(Calendar.HOUR) + " o clock");
 
         //Register next alarm
         registerReceiver(context);
