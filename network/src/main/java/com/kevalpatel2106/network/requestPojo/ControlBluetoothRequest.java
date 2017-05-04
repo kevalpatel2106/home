@@ -26,11 +26,15 @@ import com.google.gson.annotations.SerializedName;
  */
 @SuppressWarnings("FieldCanBeLocal")
 public class ControlBluetoothRequest {
-    @SerializedName("isConnect")
+    @SerializedName("state")
     @Expose
-    private boolean isConnect;
+    private int state;
 
-    public void setConnect(boolean connect) {
-        isConnect = connect;
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 }

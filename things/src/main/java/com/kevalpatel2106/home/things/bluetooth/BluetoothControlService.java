@@ -30,6 +30,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.kevalpatel2106.home.things.R;
+import com.kevalpatel2106.home.utils.cons.BluetoothStates;
 import com.kevalpatel2106.home.utils.tts.TTS;
 
 import java.util.Objects;
@@ -42,12 +43,10 @@ import java.util.Objects;
  * way to block specific pairing attempts while in pairing mode. This is known limitation that is
  * being worked on.
  */
-public class A2DPSinkService extends Service {
-    private static final int TURN_OFF_BT = 892;
-    private static final int TURN_ON_BT = 122;
+public class BluetoothControlService extends Service {
     private static final String ARG_BT_STATE = "bt_state";
 
-    private static final String TAG = A2DPSinkService.class.getSimpleName();
+    private static final String TAG = BluetoothControlService.class.getSimpleName();
     private static final String ADAPTER_FRIENDLY_NAME = "JarvisBT";
 
     private static final int FOREGROUND_NOTIFICATION_ID = 123;
@@ -122,15 +121,21 @@ public class A2DPSinkService extends Service {
         }
     };
 
-    public static void startBluetoothA2DP(Context context) {
-        Intent intent = new Intent(context, A2DPSinkService.class);
-        intent.putExtra(A2DPSinkService.ARG_BT_STATE, A2DPSinkService.TURN_ON_BT);
+    public static void turnOnBluetooth(Context context) {
+        Intent intent = new Intent(context, BluetoothControlService.class);
+        intent.putExtra(BluetoothControlService.ARG_BT_STATE, BluetoothStates.STATE_TURN_ON);
         context.startService(intent);
     }
 
-    public static void stopBluetoothA2DP(Context context) {
-        Intent intent = new Intent(context, A2DPSinkService.class);
-        intent.putExtra(A2DPSinkService.ARG_BT_STATE, A2DPSinkService.TURN_OFF_BT);
+    public static void disconnectBluetooth(Context context) {
+        Intent intent = new Intent(context, BluetoothControlService.class);
+        intent.putExtra(BluetoothControlService.ARG_BT_STATE, BluetoothStates.STATE_TURN_DISCONNECT_ALL);
+        context.startService(intent);
+    }
+
+    public static void turnOffBluetooth(Context context) {
+        Intent intent = new Intent(context, BluetoothControlService.class);
+        intent.putExtra(BluetoothControlService.ARG_BT_STATE, BluetoothStates.STATE_TURN_OFF);
         context.startService(intent);
     }
 
@@ -174,10 +179,13 @@ public class A2DPSinkService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         switch (intent.getIntExtra(ARG_BT_STATE, -1)) {
-            case TURN_ON_BT:
+            case BluetoothStates.STATE_TURN_ON:
                 enableDiscoverable();
                 break;
-            case TURN_OFF_BT:
+            case BluetoothStates.STATE_TURN_DISCONNECT_ALL:
+                disconnectConnectedDevices();
+                break;
+            case BluetoothStates.STATE_TURN_OFF:
                 stopForeground(true);
                 stopSelf();
                 break;

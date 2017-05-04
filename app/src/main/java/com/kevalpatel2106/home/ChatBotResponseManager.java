@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.JsonElement;
+import com.kevalpatel2106.home.utils.cons.BluetoothStates;
 import com.kevalpatel2106.network.APIObserver;
 import com.kevalpatel2106.network.RetrofitUtils;
 import com.kevalpatel2106.network.requestPojo.ControlBluetoothRequest;
@@ -29,9 +30,10 @@ public class ChatBotResponseManager {
     private static final String TAG = ChatBotResponseManager.class.getSimpleName();
 
     private static final String INTENT_WEB_SEARCH = "web.search";
-    private static final String INTENT_INIT_A2DP = "turnon.bluetooth";
-    private static final String INTENT_PLAY_A2DP = "play.a2dp";
-    private static final String INTENT_DISCONNECT_A2DP = "turnoff.bluetooth";
+    private static final String INTENT_BT_ON = "turnon.bluetooth";
+    private static final String INTENT_BT_PLAY_SONG = "play.bluetooth";
+    private static final String INTENT_BT_DISCONNECT = "disconnect.bluetooth";
+    private static final String INTENT_BT_OFF = "turnoff.bluetooth";
 
     public static void manageResponse(@NonNull final Context context,
                                       @NonNull AIResponse aiResponse) {
@@ -63,28 +65,45 @@ public class ChatBotResponseManager {
                     e.printStackTrace();
                 }
                 break;
-            case INTENT_INIT_A2DP:
-            case INTENT_DISCONNECT_A2DP:
-            case INTENT_PLAY_A2DP:
+            case INTENT_BT_ON:
+            case INTENT_BT_PLAY_SONG:
                 ControlBluetoothRequest bluetoothRequest = new ControlBluetoothRequest();
-                bluetoothRequest.setConnect(!result.getAction().equals(INTENT_DISCONNECT_A2DP));
-                RetrofitUtils.subscribe(RetrofitUtils.getApiService().controlBluetooth(RetrofitUtils.getAuthString(context), bluetoothRequest),
-                        new APIObserver<PlainResponseData>() {
-                            @Override
-                            public void onError(String errorMessage, int statusCode) {
-                                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
-                                Log.d(TAG, errorMessage);
-                            }
-
-                            @Override
-                            public void onSuccess(PlainResponseData responseData) {
-                                //Enable Disable bluetooth
-                                if (result.getAction().equals(INTENT_PLAY_A2DP))
-                                    changeBluetoothState(true);
-                            }
-                        });
+                bluetoothRequest.setState(BluetoothStates.STATE_TURN_ON);
+                makeControlBluetoothApi(context, result.getAction(), bluetoothRequest);
+                break;
+            case INTENT_BT_OFF:
+                bluetoothRequest = new ControlBluetoothRequest();
+                bluetoothRequest.setState(BluetoothStates.STATE_TURN_OFF);
+                makeControlBluetoothApi(context, result.getAction(), bluetoothRequest);
+                break;
+            case INTENT_BT_DISCONNECT:
+                bluetoothRequest = new ControlBluetoothRequest();
+                bluetoothRequest.setState(BluetoothStates.STATE_TURN_DISCONNECT_ALL);
+                makeControlBluetoothApi(context, result.getAction(), bluetoothRequest);
                 break;
         }
+    }
+
+    private static void makeControlBluetoothApi(@NonNull final Context context,
+                                                @NonNull final String intentName,
+                                                @NonNull final ControlBluetoothRequest bluetoothRequest) {
+        RetrofitUtils.subscribe(RetrofitUtils.getApiService().controlBluetooth(RetrofitUtils.getAuthString(context), bluetoothRequest),
+                new APIObserver<PlainResponseData>() {
+                    @Override
+                    public void onError(String errorMessage, int statusCode) {
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, errorMessage);
+                    }
+
+                    @Override
+                    public void onSuccess(PlainResponseData responseData) {
+                        //Enable Disable bluetooth
+                        if (intentName.equals(INTENT_BT_DISCONNECT))
+                            changeBluetoothState(false);
+                        else if (intentName.equals(INTENT_BT_PLAY_SONG))
+                            changeBluetoothState(false);
+                    }
+                });
     }
 
     private static void changeBluetoothState(boolean isEnable) {
