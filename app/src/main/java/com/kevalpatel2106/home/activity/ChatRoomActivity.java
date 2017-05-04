@@ -156,7 +156,7 @@ public class ChatRoomActivity extends BaseActivity
     public void onDestroy() {
         super.onDestroy();
         //Release TTS.
-        TTS.release();
+        TTS.flush();
     }
 
     /**

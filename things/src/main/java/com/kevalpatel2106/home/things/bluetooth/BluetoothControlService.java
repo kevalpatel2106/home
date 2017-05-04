@@ -224,9 +224,6 @@ public class BluetoothControlService extends Service {
             mBluetoothAdapter.closeProfileProxy(A2dpSinkHelper.A2DP_SINK_PROFILE, mA2DPSinkProxy);
             mBluetoothAdapter.disable();
         }
-
-        //Release the TTS
-        TTS.release();
     }
 
     @Nullable

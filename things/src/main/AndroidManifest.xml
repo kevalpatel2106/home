@@ -59,6 +59,10 @@
         </service>
 
         <receiver
+            android:name=".timeReminder.TimeReminderReceiver"
+            android:exported="false"/>
+
+        <receiver
             android:name=".receivers.BootCompleteReceiver"
             android:exported="false">
             <intent-filter
@@ -66,6 +70,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
+
     </application>
 
 </manifest>

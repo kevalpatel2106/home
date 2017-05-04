@@ -129,6 +129,7 @@ dependencies {
     //Firebase api
     compile firebaseLib.fcm
     compile firebaseLib.core
+    compile firebaseLib.dispatcher
 
     //Api ai
     compile apiai.libai
