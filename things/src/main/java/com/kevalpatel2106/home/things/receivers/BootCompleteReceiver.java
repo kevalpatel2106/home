@@ -13,6 +13,7 @@ import com.kevalpatel2106.home.things.activity.LaunchActivity;
 public class BootCompleteReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
+        //Start main activity
         Intent i = new Intent();
         i.setClassName(LaunchActivity.class.getPackage().getName(), LaunchActivity.class.getSimpleName());
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
