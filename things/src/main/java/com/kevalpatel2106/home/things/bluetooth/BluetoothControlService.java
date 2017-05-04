@@ -37,7 +37,7 @@ import java.util.Objects;
 
 /**
  * Sample usage of the A2DP sink bluetooth profile. At startup, this activity sets the Bluetooth
- * adapter in pairing mode for {@link #DISCOVERABLE_TIMEOUT_MS} ms.
+ * adapter in pairing mode for {@link #DISCOVERABLE_TIMEOUT_SEC} ms.
  * <p>
  * NOTE: While in pairing mode, pairing requests are auto-accepted - at this moment there's no
  * way to block specific pairing attempts while in pairing mode. This is known limitation that is
@@ -50,7 +50,7 @@ public class BluetoothControlService extends Service {
     private static final String ADAPTER_FRIENDLY_NAME = "JarvisBT";
 
     private static final int FOREGROUND_NOTIFICATION_ID = 123;
-    private static final int DISCOVERABLE_TIMEOUT_MS = 300;
+    private static final int DISCOVERABLE_TIMEOUT_SEC = 300;
 
     /**
      * Handle an intent that is broadcast by the Bluetooth A2DP sink profile whenever a device
@@ -183,9 +183,11 @@ public class BluetoothControlService extends Service {
                 enableDiscoverable();
                 break;
             case BluetoothStates.STATE_TURN_DISCONNECT_ALL:
+                TTS.speak("All devices disconnected.");
                 disconnectConnectedDevices();
                 break;
             case BluetoothStates.STATE_TURN_OFF:
+                TTS.speak("Turning off bluetooth.");
                 stopForeground(true);
                 stopSelf();
                 break;
@@ -212,8 +214,6 @@ public class BluetoothControlService extends Service {
      * Release all the resources before killing the service.
      */
     private void killService() {
-        TTS.speak("Turning off bluetooth.");
-
         //Unregister all the receiver.
         unregisterReceiver(mAdapterStateChangeReceiver);
         unregisterReceiver(mSinkProfileStateChangeReceiver);
@@ -258,15 +258,15 @@ public class BluetoothControlService extends Service {
 
     /**
      * Enable the current {@link BluetoothAdapter} to be discovered (available for pairing) for
-     * the next {@link #DISCOVERABLE_TIMEOUT_MS} ms.
+     * the next {@link #DISCOVERABLE_TIMEOUT_SEC} ms.
      */
     private void enableDiscoverable() {
         Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, DISCOVERABLE_TIMEOUT_MS);
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, DISCOVERABLE_TIMEOUT_SEC);
         startActivity(discoverableIntent);
 
-        TTS.speak("Bluetooth audio sink is discoverable for " + DISCOVERABLE_TIMEOUT_MS +
-                " milliseconds. Look for a device named " + ADAPTER_FRIENDLY_NAME);
+        TTS.speak("Bluetooth is discoverable for " + DISCOVERABLE_TIMEOUT_SEC +
+                " seconds. Look for a device named " + ADAPTER_FRIENDLY_NAME);
     }
 
     /**
