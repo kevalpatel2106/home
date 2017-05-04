@@ -32,7 +32,8 @@ public class TimeReminderReceiver extends BroadcastReceiver {
     public static void registerReceiver(Context context) {
 
         //Get the milliseconds for next hour
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+        calendar.setTimeZone(TimeZone.getTimeZone("Asia/Calcutta"));
         calendar.add(Calendar.HOUR_OF_DAY, 1);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);

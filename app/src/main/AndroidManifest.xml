@@ -25,7 +25,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ChatRoomActivity"/>
         <activity android:name=".activity.LoginActivity"/>
 
         <!-- Firebase messaging service -->
@@ -42,6 +41,8 @@
             </intent-filter>
         </service>
 
+        <activity android:name=".activity.CommandActivity">
+        </activity>
     </application>
 
 </manifest>

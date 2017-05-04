@@ -16,8 +16,11 @@
 
 package com.kevalpatel2106.network.requestPojo;
 
+import android.content.Context;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.kevalpatel2106.home.utils.Utils;
 
 /**
  * Created by Keval on 27-Dec-16.
@@ -25,16 +28,20 @@ import com.google.gson.annotations.SerializedName;
  * @author {@link 'https://github.com/kevalpatel2106'}
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class ControlBluetoothRequest {
-    @SerializedName("state")
+public class SendCommandRequest {
+    @SerializedName("command")
     @Expose
-    private int state;
+    private String command;
 
-    public int getState() {
-        return state;
+    @SerializedName("deviceId")
+    @Expose
+    private String deviceId;
+
+    public SendCommandRequest(Context context) {
+        this.deviceId = Utils.getDeviceId(context);
     }
 
-    public void setState(int state) {
-        this.state = state;
+    public void setCommand(String command) {
+        this.command = command;
     }
 }

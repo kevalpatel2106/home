@@ -144,11 +144,7 @@ dependencies {
     //firebase
     compile firebaseLib.fcm
     compile firebaseLib.core
-
-    //Api ai
-    compile apiai.libai
-    compile apiai.sdk
-    compile apiai.commonsio
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }
 apply plugin: 'com.google.gms.google-services'
 

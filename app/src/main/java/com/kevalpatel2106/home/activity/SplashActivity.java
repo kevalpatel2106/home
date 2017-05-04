@@ -20,7 +20,7 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         startActivity(new DeviceSessionManager(this).isDeviceRegistered() ?
-                new Intent(this, ChatRoomActivity.class) :
+                new Intent(this, CommandActivity.class) :
                 new Intent(this, LoginActivity.class));
     }
 

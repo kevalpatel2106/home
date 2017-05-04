@@ -16,12 +16,13 @@
 
 package com.kevalpatel2106.home.things.fcm;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.kevalpatel2106.home.things.bluetooth.BluetoothControlService;
-import com.kevalpatel2106.home.utils.cons.BluetoothStates;
+import com.kevalpatel2106.home.things.apiai.ApiAiManager;
 
 /**
  * Created by Keval on 08-Feb-17.
@@ -29,12 +30,12 @@ import com.kevalpatel2106.home.utils.cons.BluetoothStates;
  * @author {@link 'https://github.com/kevalpatel2106'}
  */
 public class FCMMessagingService extends FirebaseMessagingService {
-    private static final String TYPE_CONTROL_BT = "init.a2dp";
+    private static final String TYPE_SEND_COMMAND_TO_AT = "sendCommandAt";
 
     private static final String TAG = FCMMessagingService.class.getSimpleName();
 
     @Override
-    public void onMessageReceived(RemoteMessage remoteMessage) {
+    public void onMessageReceived(final RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
         Log.d(TAG, "onMessageReceived: " + remoteMessage.getData().toString());
@@ -43,19 +44,15 @@ public class FCMMessagingService extends FirebaseMessagingService {
         if (ct == null || ct.isEmpty()) return;
 
         switch (ct) {
-            case TYPE_CONTROL_BT:
-                switch (Integer.parseInt(remoteMessage.getData().get("state"))) {
-                    case BluetoothStates.STATE_TURN_ON:
-                        BluetoothControlService.turnOnBluetooth(this);
-                        break;
-                    case BluetoothStates.STATE_TURN_DISCONNECT_ALL:
-                        BluetoothControlService.disconnectBluetooth(this);
-                        break;
-                    case BluetoothStates.STATE_TURN_OFF:
-                    default:
-                        BluetoothControlService.turnOffBluetooth(this);
-                        break;
-                }
+            case TYPE_SEND_COMMAND_TO_AT:
+                android.os.Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ApiAiManager apiAiManager = new ApiAiManager(FCMMessagingService.this);
+                        apiAiManager.send(remoteMessage.getData().get("commandText"));
+                    }
+                });
                 break;
         }
     }
