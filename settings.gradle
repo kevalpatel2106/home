@@ -3,4 +3,5 @@ include ':utils',
         ':network',
         ':app',
         ':things',
-        ':tensorflow-android-inference'
+        ':tensorflow-android-inference',
+        ':pocketsphinx-android'
