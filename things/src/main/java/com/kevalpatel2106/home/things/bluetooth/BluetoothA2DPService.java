@@ -42,13 +42,13 @@ import java.util.Objects;
  * way to block specific pairing attempts while in pairing mode. This is known limitation that is
  * being worked on.
  */
-public class BluetoothControlService extends Service {
+public class BluetoothA2DPService extends Service {
     private static final int STATE_TURN_ON = 1;
     private static final int STATE_TURN_OFF = 2;
     private static final int STATE_TURN_DISCONNECT_ALL = 3;
     private static final String ARG_BT_STATE = "bt_state";
 
-    private static final String TAG = BluetoothControlService.class.getSimpleName();
+    private static final String TAG = BluetoothA2DPService.class.getSimpleName();
     private static final String ADAPTER_FRIENDLY_NAME = "JarvisBT";
 
     private static final int FOREGROUND_NOTIFICATION_ID = 123;
@@ -71,9 +71,9 @@ public class BluetoothControlService extends Service {
                     int newState = A2dpSinkHelper.getCurrentProfileState(intent);
 
                     if (newState == BluetoothProfile.STATE_CONNECTED) {
-                        TTS.speak(BluetoothControlService.this, "Connected to " + deviceName);
+                        TTS.speak(BluetoothA2DPService.this, "Connected to " + deviceName);
                     } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                        TTS.speak(BluetoothControlService.this, "Disconnected from " + deviceName);
+                        TTS.speak(BluetoothA2DPService.this, "Disconnected from " + deviceName);
                     }
                 }
             }
@@ -124,20 +124,20 @@ public class BluetoothControlService extends Service {
     };
 
     public static void turnOnBluetooth(Context context) {
-        Intent intent = new Intent(context, BluetoothControlService.class);
-        intent.putExtra(BluetoothControlService.ARG_BT_STATE, STATE_TURN_ON);
+        Intent intent = new Intent(context, BluetoothA2DPService.class);
+        intent.putExtra(BluetoothA2DPService.ARG_BT_STATE, STATE_TURN_ON);
         context.startService(intent);
     }
 
     public static void disconnectBluetooth(Context context) {
-        Intent intent = new Intent(context, BluetoothControlService.class);
-        intent.putExtra(BluetoothControlService.ARG_BT_STATE, STATE_TURN_DISCONNECT_ALL);
+        Intent intent = new Intent(context, BluetoothA2DPService.class);
+        intent.putExtra(BluetoothA2DPService.ARG_BT_STATE, STATE_TURN_DISCONNECT_ALL);
         context.startService(intent);
     }
 
     public static void turnOffBluetooth(Context context) {
-        Intent intent = new Intent(context, BluetoothControlService.class);
-        intent.putExtra(BluetoothControlService.ARG_BT_STATE, STATE_TURN_OFF);
+        Intent intent = new Intent(context, BluetoothA2DPService.class);
+        intent.putExtra(BluetoothA2DPService.ARG_BT_STATE, STATE_TURN_OFF);
         context.startService(intent);
     }
 

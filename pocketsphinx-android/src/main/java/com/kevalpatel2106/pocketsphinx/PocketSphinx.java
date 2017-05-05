@@ -17,9 +17,11 @@ public class PocketSphinx implements RecognitionListener {
 
     private static final String TAG = PocketSphinx.class.getSimpleName();
     private static final String ACTIVATION_KEYPHRASE = "ok things";
+
     /* Named searches allow to quickly reconfigure the decoder */
     private static final String WAKEUP_SEARCH = "wakeup";
     private static final String ACTION_SEARCH = "action";
+
     private final Listener listener;
     private SpeechRecognizer recognizer;
 

@@ -2,13 +2,9 @@ package com.kevalpatel2106.home.things.apiai;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
-import com.google.gson.JsonElement;
-import com.kevalpatel2106.home.things.bluetooth.BluetoothControlService;
+import com.kevalpatel2106.home.things.bluetooth.BluetoothA2DPService;
 import com.kevalpatel2106.home.utils.tts.TTS;
-
-import java.util.Map;
 
 import ai.api.model.AIResponse;
 import ai.api.model.Result;
@@ -29,30 +25,35 @@ class ApiAiResponseManager {
                                @NonNull AIResponse aiResponse) {
         final Result result = aiResponse.getResult();
         final String speech = result.getFulfillment().getSpeech();
-        TTS.speak(context, speech);
-
-        // Get parameters
-        String parameterString = "";
-        if (result.getParameters() != null && !result.getParameters().isEmpty()) {
-            for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
-                parameterString += "(" + entry.getKey() + ", " + entry.getValue() + ") ";
-            }
-        }
-
-        Log.d("Query:", result.getFulfillment().getSpeech()
-                + "\nAction: " + result.getAction()
-                + "\nParameters: " + parameterString);
+//
+//        // Get parameters
+//        String parameterString = "";
+//        if (result.getParameters() != null && !result.getParameters().isEmpty()) {
+//            for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+//                parameterString += "(" + entry.getKey() + ", " + entry.getValue() + ") ";
+//            }
+//        }
+//
+//        Log.d("Query:", result.getFulfillment().getSpeech()
+//                + "\nAction: " + result.getAction()
+//                + "\nParameters: " + parameterString);
 
         switch (result.getAction()) {
             case INTENT_BT_ON:
             case INTENT_BT_PLAY_SONG:
-                BluetoothControlService.turnOnBluetooth(context);
+                BluetoothA2DPService.turnOnBluetooth(context);
+                TTS.speak(context, speech);
                 break;
             case INTENT_BT_OFF:
-                BluetoothControlService.turnOffBluetooth(context);
+                BluetoothA2DPService.turnOffBluetooth(context);
+                TTS.speak(context, speech);
                 break;
             case INTENT_BT_DISCONNECT:
-                BluetoothControlService.disconnectBluetooth(context);
+                BluetoothA2DPService.disconnectBluetooth(context);
+                TTS.speak(context, speech);
+                break;
+            default:
+                TTS.speak(context, speech);
                 break;
         }
     }

@@ -37,7 +37,11 @@
         </activity>
 
         <service
-            android:name=".bluetooth.BluetoothControlService"
+            android:name=".bluetooth.BluetoothA2DPService"
+            android:exported="false"/>
+
+        <service
+            android:name=".SpeechRecognitionService"
             android:exported="false"/>
 
         <!--Firebase messaging service-->
