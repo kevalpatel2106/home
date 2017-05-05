@@ -69,9 +69,13 @@ public class LaunchActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        // Bind to SpeechRecognitionService
-        Intent intent = new Intent(this, SpeechRecognitionService.class);
-        bindService(intent, mSpeechRecognitionServiceConnection, Context.BIND_AUTO_CREATE);
+        if (Utils.isMicConnected(this)) {
+            // Bind to SpeechRecognitionService
+            Intent intent = new Intent(this, SpeechRecognitionService.class);
+            bindService(intent, mSpeechRecognitionServiceConnection, Context.BIND_AUTO_CREATE);
+        } else {
+            Log.d(TAG, "onStart: Mic not connected.");
+        }
     }
 
     @Override

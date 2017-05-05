@@ -1,6 +1,7 @@
 package com.kevalpatel2106.home.things.apiai;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.kevalpatel2106.home.things.BuildConfig;
 import com.kevalpatel2106.home.utils.tts.TTS;
@@ -39,7 +40,7 @@ public class ApiAiManager implements AIListener {
     }
 
 
-    public void send(final String text) {
+    public void send(@NonNull final String text) {
         //Create observer in Rx.
         final Observer<AIResponse> observer = new Observer<AIResponse>() {
             @Override
@@ -49,11 +50,13 @@ public class ApiAiManager implements AIListener {
 
             @Override
             public void onError(Throwable e) {
+                //Error occurred
                 ApiAiManager.this.onError(new AIError(e.getMessage()));
             }
 
             @Override
             public void onNext(AIResponse aiResponse) {
+                //On result
                 onResult(aiResponse);
             }
         };

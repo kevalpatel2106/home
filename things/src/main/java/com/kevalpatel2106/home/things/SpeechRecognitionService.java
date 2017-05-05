@@ -8,6 +8,7 @@ import android.os.IBinder;
 import com.kevalpatel2106.home.things.apiai.ApiAiManager;
 import com.kevalpatel2106.home.utils.tts.TTS;
 import com.kevalpatel2106.pocketsphinx.PocketSphinx;
+import com.kevalpatel2106.pocketsphinx.PocketSphinxListener;
 
 /**
  * Created by Keval Patel on 05/05/17.
@@ -15,10 +16,11 @@ import com.kevalpatel2106.pocketsphinx.PocketSphinx;
  * @author 'https://github.com/kevalpatel2106'
  */
 
-public class SpeechRecognitionService extends Service implements PocketSphinx.Listener {
+public class SpeechRecognitionService extends Service implements PocketSphinxListener {
     // Binder given to clients
     private final IBinder mBinder = new LocalBinder();
     private ApiAiManager mApiAiManager;
+    private PocketSphinx pocketSphinx;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -29,27 +31,31 @@ public class SpeechRecognitionService extends Service implements PocketSphinx.Li
     public void onCreate() {
         super.onCreate();
         mApiAiManager = new ApiAiManager(this);
-        PocketSphinx pocketSphinx = new PocketSphinx(this, this);
+        pocketSphinx = new PocketSphinx(this, this);
     }
 
     @Override
     public void onSpeechRecognizerReady() {
         TTS.speak(this, "I'm ready!");
+        pocketSphinx.startListeningToActivationPhrase();
     }
 
     @Override
     public void onActivationPhraseDetected() {
         TTS.speak(this, "Yup?");
+        pocketSphinx.startListeningToAction();
     }
 
     @Override
     public void onTextRecognized(String recognizedText) {
         mApiAiManager.send(recognizedText);
+        pocketSphinx.startListeningToActivationPhrase();
     }
 
     @Override
     public void onTimeout() {
         TTS.speak(this, "Timeout! You're too slow");
+        pocketSphinx.startListeningToActivationPhrase();
     }
 
     /**

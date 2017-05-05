@@ -22,10 +22,10 @@ public class PocketSphinx implements RecognitionListener {
     private static final String WAKEUP_SEARCH = "wakeup";
     private static final String ACTION_SEARCH = "action";
 
-    private final Listener listener;
+    private final PocketSphinxListener listener;
     private SpeechRecognizer recognizer;
 
-    public PocketSphinx(Context context, Listener listener) {
+    public PocketSphinx(Context context, PocketSphinxListener listener) {
         this.listener = listener;
         runRecognizerSetup(context);
     }
@@ -154,15 +154,5 @@ public class PocketSphinx implements RecognitionListener {
         // Custom recognizer
         recognizer.addKeyphraseSearch(WAKEUP_SEARCH, ACTIVATION_KEYPHRASE);
         recognizer.addNgramSearch(ACTION_SEARCH, new File(assetsDir, "predefined.lm.bin"));
-    }
-
-    public interface Listener {
-        void onSpeechRecognizerReady();
-
-        void onActivationPhraseDetected();
-
-        void onTextRecognized(String recognizedText);
-
-        void onTimeout();
     }
 }
