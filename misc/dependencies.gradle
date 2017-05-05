@@ -11,7 +11,6 @@ ext {
             dlibInterface      : ':dlib-android-interface',
             network            : ':network',
             utils              : ':utils',
-            pocketsphinx       : ':pocketsphinx-android',
     ]
 
     //Exclude group for the test dependency

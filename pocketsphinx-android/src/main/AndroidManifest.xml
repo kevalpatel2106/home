@@ -1,3 +1,1 @@
-<manifest
-    package="edu.cmu.pocketsphinx.models">
-</manifest>
+<manifest package="com.kevalpatel2106.pocketsphinx"/>

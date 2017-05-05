@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply from: '../misc/config.gradle'
-
 android {
     compileSdkVersion buidlConfig.compile
     buildToolsVersion buidlConfig.buildToolVersion
@@ -32,9 +31,10 @@ android {
         useNewCruncher false
     }
 }
-
 ant.importBuild 'assets.xml'
 preBuild.dependsOn(list, checksum)
 clean.dependsOn(clean_assets)
-configurations.maybeCreate("default")
-artifacts.add("default", file('pocketsphinx-android-5prealpha-release.aar'))
+
+dependencies {
+    compile files('libs/pocketsphinx-java-interface.jar')
+}

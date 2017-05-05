@@ -110,7 +110,7 @@ dependencies {
 
     compile project(projectModule.network)
     compile project(projectModule.utils)
-    compile project(projectModule.pocketsphinx)
+    compile project(':pocketsphinx-android')
 
     //Test dependency
     testCompile testLib.junit
