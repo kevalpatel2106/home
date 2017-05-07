@@ -17,6 +17,7 @@
 package com.kevalpatel2106.home.utils;
 
 import android.annotation.SuppressLint;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -150,5 +151,10 @@ public class Utils {
     public static boolean isMicConnected(Context context) {
         PackageManager pm = context.getPackageManager();
         return pm.hasSystemFeature(PackageManager.FEATURE_MICROPHONE);
+    }
+
+    public static boolean isBluetoothEnable() {
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        return mBluetoothAdapter != null && mBluetoothAdapter.isEnabled();
     }
 }

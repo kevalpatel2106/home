@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.google.gson.JsonElement;
 import com.kevalpatel2106.home.things.bluetooth.BluetoothA2DPService;
 import com.kevalpatel2106.home.utils.AudioUtils;
+import com.kevalpatel2106.home.utils.Utils;
 import com.kevalpatel2106.home.utils.cons.Constants;
 import com.kevalpatel2106.home.utils.tts.TTS;
 
@@ -27,6 +28,7 @@ class ApiAiResponseManager {
     private static final String INTENT_BT_PLAY_SONG = "bluetooth.play";
     private static final String INTENT_BT_DISCONNECT = "bluetooth.disconnect";
     private static final String INTENT_BT_OFF = "bluetooth.off";
+    private static final String INTENT_BT_CHECK = "bluetooth.check";
 
     //Time intents
     private static final String INTENT_TIME_GET = "time.get";
@@ -63,11 +65,17 @@ class ApiAiResponseManager {
                 TTS.speak(context, speech);
                 break;
             case INTENT_BT_OFF:
-                BluetoothA2DPService.turnOffBluetooth(context);
+                if (!Utils.isBluetoothEnable()) speech = "Bluetooth is already turned off.";
+                else BluetoothA2DPService.turnOffBluetooth(context);
                 TTS.speak(context, speech);
                 break;
             case INTENT_BT_DISCONNECT:
-                BluetoothA2DPService.disconnectBluetooth(context);
+                if (!Utils.isBluetoothEnable()) speech = "Bluetooth is already turned off.";
+                else BluetoothA2DPService.disconnectBluetooth(context);
+                TTS.speak(context, speech);
+                break;
+            case INTENT_BT_CHECK:
+                speech = "Bluetooth is " + (Utils.isBluetoothEnable() ? "enabled." : "disabled.");
                 TTS.speak(context, speech);
                 break;
             case INTENT_TIME_GET:
