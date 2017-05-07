@@ -57,9 +57,6 @@ public class LaunchActivity extends AppCompatActivity {
         //Initialize TTS so the tts responses don't take too much time.
         TTS.speak(this, "I am ready.");
 
-        //Set all the volume at maximum
-        Utils.setMaxVolume(this);
-
         //register the device if already not registered
         FirebaseApp.initializeApp(this);
         if (!new DeviceSessionManager(this).isDeviceRegistered()) registerGcm();

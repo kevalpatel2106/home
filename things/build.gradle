@@ -111,6 +111,7 @@ dependencies {
     compile project(projectModule.network)
     compile project(projectModule.utils)
     compile project(':pocketsphinx-android')
+    compile project(':ftp-server')
 
     //Test dependency
     testCompile testLib.junit

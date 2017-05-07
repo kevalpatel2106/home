@@ -1,0 +1,43 @@
+apply plugin: 'com.android.library'
+apply from: '../misc/config.gradle'
+apply from: '../misc/dependencies.gradle'
+
+android {
+    compileSdkVersion buidlConfig.compile
+    buildToolsVersion buidlConfig.buildToolVersion
+
+    compileOptions {
+        sourceCompatibility javaCompatibility.sourceCompatibility
+        targetCompatibility javaCompatibility.targetCompatibility
+    }
+
+    defaultConfig {
+        //sdks
+        minSdkVersion buidlConfig.min
+        targetSdkVersion buidlConfig.target
+
+        //strip other than english resources
+        resConfigs "en"
+
+        consumerProguardFiles proguardConfig.proguardPath
+    }
+
+    packagingOptions packageExcludes
+
+    lintOptions {
+        abortOnError false
+    }
+
+    aaptOptions {
+        cruncherEnabled = false
+        useNewCruncher false
+    }
+}
+
+dependencies {
+    compile files('libs/ftpserver-core-1.0.6.jar')
+    compile files('libs/slf4j-log4j12-1.5.2.jar')
+    compile files('libs/mina-core-2.0.4.jar')
+    compile files('libs/slf4j-api-1.5.2.jar')
+    compile files('libs/log4j-1.2.14.jar')
+}

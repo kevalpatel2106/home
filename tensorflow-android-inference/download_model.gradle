@@ -43,21 +43,21 @@ task downloadFile(type: Download) {
 }
 
 task extractModels(type: Copy) {
-    for (f in models) {
-        from zipTree(TMP_DIR + '/' + f)
-    }
-
-    into file(ASSET_DIR)
-    fileMode 0644
-    exclude '**/LICENSE'
-
-    def needDownload = false
     if (!new File(ASSET_DIR).exists() || new File(ASSET_DIR).list().length < 2) {
-        needDownload = true
-    }
 
-    if (needDownload) {
-        dependsOn downloadFile
+        if (new File(TMP_DIR).exists() && new File(TMP_DIR).list().length >= 2) {
+            //Extract files from the download directory.
+            for (f in models) {
+                from zipTree(TMP_DIR + '/' + f)
+            }
+
+            into file(ASSET_DIR)
+            fileMode 0644
+            exclude '**/LICENSE'
+        } else {
+            //Download the files.
+            dependsOn downloadFile
+        }
     }
 }
 

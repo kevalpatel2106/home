@@ -149,8 +149,18 @@ public final class SharedPrefsManager {
      * @param key : key of value field to read
      * @return int value for given key else -1 if key not found.
      */
-    public long getIntFromPreference(@NonNull String key) {
+    public int getIntFromPreference(@NonNull String key) {
         return mSharedPreference.getInt(key, -1);
+    }
+
+    /**
+     * Read string from shared preference file
+     *
+     * @param key : key of value field to read
+     * @return int value for given key else -1 if key not found.
+     */
+    public int getIntFromPreference(@NonNull String key, int defVolume) {
+        return mSharedPreference.getInt(key, defVolume);
     }
 
     /**
