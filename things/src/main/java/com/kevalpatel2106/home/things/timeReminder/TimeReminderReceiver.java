@@ -65,7 +65,10 @@ public class TimeReminderReceiver extends BroadcastReceiver {
             //Speak
             Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
             calendar.setTimeZone(TimeZone.getTimeZone(Constants.TIME_ZONE));
-            TTS.speak(context, "It\'s " + calendar.get(Calendar.HOUR) + " o clock");
+            //noinspection WrongConstant
+            TTS.speak(context, "It\'s "
+                    + (calendar.get(Calendar.HOUR) == 0 ? "12" : calendar.get(Calendar.HOUR))
+                    + " o clock");
         }
 
         //Register next alarm
