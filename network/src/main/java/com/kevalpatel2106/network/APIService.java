@@ -16,13 +16,9 @@
 
 package com.kevalpatel2106.network;
 
-import com.kevalpatel2106.network.requestPojo.DeleteDeviceRequest;
-import com.kevalpatel2106.network.requestPojo.DeviceRegisterRequest;
 import com.kevalpatel2106.network.requestPojo.LoginRequest;
 import com.kevalpatel2106.network.requestPojo.SendCommandRequest;
-import com.kevalpatel2106.network.responsePojo.DeleteDeviceData;
 import com.kevalpatel2106.network.responsePojo.DeviceListData;
-import com.kevalpatel2106.network.responsePojo.DeviceRegisterData;
 import com.kevalpatel2106.network.responsePojo.LoginResponseData;
 import com.kevalpatel2106.network.responsePojo.PlainResponseData;
 import com.kevalpatel2106.network.responsePojo.base.BaseResponse;
@@ -46,17 +42,6 @@ public interface APIService {
     //Login/Register apis
     @POST("updateGcmId")
     Observable<BaseResponse<LoginResponseData>> updateGcmId(@Body LoginRequest loginRequest);
-
-    @POST("admin/registerDevice")
-    Observable<BaseResponse<DeviceRegisterData>> registerDevice(@Header("Authorization") String authorization,
-                                                                @Body DeviceRegisterRequest request);
-
-    @POST("admin/deleteDevice")
-    Observable<BaseResponse<DeleteDeviceData>> deleteDevice(@Header("Authorization") String authorization,
-                                                            @Body DeleteDeviceRequest logoutRequest);
-
-    @POST("admin/getAllDevices")
-    Observable<BaseResponse<DeviceListData>> getAllDevicesAdmin(@Header("Authorization") String authorization);
 
     @POST("getAllDevicesAdmin")
     Observable<BaseResponse<DeviceListData>> getAllDevices(@Header("Authorization") String authorization);

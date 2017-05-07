@@ -1,5 +1,5 @@
-include ':utils', ':ftp-server',
-        ':admin',
+include ':utils',
+        ':ftp-server',
         ':network',
         ':app',
         ':things',

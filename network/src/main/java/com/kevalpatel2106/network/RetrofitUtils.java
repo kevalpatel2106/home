@@ -67,30 +67,6 @@ public final class RetrofitUtils {
     }
 
     /**
-     * Get the instance of the retrofit {@link APIService}.
-     *
-     * @return {@link APIService}
-     */
-    public static APIService getAdminApiService() {
-        OkHttpClient.Builder client = new OkHttpClient.Builder();
-
-        //Enable logging for debug build
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        client.addInterceptor(interceptor);
-
-        //Building retrofit
-        final Retrofit retrofit = new Retrofit.Builder()
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(APIService.ADMIN_BASE_URL)
-                .client(client.build())
-                .build();
-
-        return retrofit.create(APIService.class);
-    }
-
-    /**
      * Subscribe to the observer and start API call.
      *
      * @param observable  observable
