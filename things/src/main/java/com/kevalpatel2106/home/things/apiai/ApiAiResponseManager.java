@@ -4,7 +4,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.kevalpatel2106.home.things.bluetooth.BluetoothA2DPService;
+import com.kevalpatel2106.home.utils.cons.Constants;
 import com.kevalpatel2106.home.utils.tts.TTS;
+
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import ai.api.model.AIResponse;
 import ai.api.model.Result;
@@ -20,11 +24,12 @@ class ApiAiResponseManager {
     private static final String INTENT_BT_PLAY_SONG = "play.bluetooth";
     private static final String INTENT_BT_DISCONNECT = "disconnect.bluetooth";
     private static final String INTENT_BT_OFF = "turnoff.bluetooth";
+    private static final String INTENT_TIME_GET = "time.get";
 
     static void manageResponse(@NonNull final Context context,
                                @NonNull AIResponse aiResponse) {
         final Result result = aiResponse.getResult();
-        final String speech = result.getFulfillment().getSpeech();
+        String speech = result.getFulfillment().getSpeech();
 //
 //        // Get parameters
 //        String parameterString = "";
@@ -50,6 +55,15 @@ class ApiAiResponseManager {
                 break;
             case INTENT_BT_DISCONNECT:
                 BluetoothA2DPService.disconnectBluetooth(context);
+                TTS.speak(context, speech);
+                break;
+            case INTENT_TIME_GET:
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeZone(TimeZone.getTimeZone(Constants.TIME_ZONE));
+                //noinspection WrongConstant
+                speech = "It is " + calendar.get(Calendar.HOUR)
+                        + "," + calendar.get(Calendar.MINUTE)
+                        + " " + (calendar.get(Calendar.AM_PM) == Calendar.AM ? "AM" : "PM");
                 TTS.speak(context, speech);
                 break;
             default:

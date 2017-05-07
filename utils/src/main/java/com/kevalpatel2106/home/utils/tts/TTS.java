@@ -52,4 +52,8 @@ public class TTS {
             mTTSEngine.speak(text, TextToSpeech.QUEUE_ADD, null, UTTERANCE_ID);
         }
     }
+
+    public static boolean isIintilized() {
+        return mTTSEngine != null;
+    }
 }

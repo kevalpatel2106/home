@@ -11,12 +11,14 @@ import android.util.Log;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.kevalpatel2106.home.things.SpeechRecognitionService;
+import com.kevalpatel2106.ftp_server.FTPManager;
 import com.kevalpatel2106.home.things.bluetooth.BluetoothA2DPService;
+import com.kevalpatel2106.home.things.speechToText.SpeechRecognitionService;
 import com.kevalpatel2106.home.things.timeReminder.TimeReminderReceiver;
 import com.kevalpatel2106.home.utils.Utils;
 import com.kevalpatel2106.home.utils.cons.DeviceType;
 import com.kevalpatel2106.home.utils.managers.DeviceSessionManager;
+import com.kevalpatel2106.home.utils.tts.TTS;
 import com.kevalpatel2106.network.APIObserver;
 import com.kevalpatel2106.network.RetrofitUtils;
 import com.kevalpatel2106.network.requestPojo.LoginRequest;
@@ -26,8 +28,8 @@ public class LaunchActivity extends AppCompatActivity {
     private static final String TAG = LaunchActivity.class.getSimpleName();
 
     private boolean isBound = false;        //Bool indicating if the services are bound?
-
     private SpeechRecognitionService mService;  //Object of the SpeechRecognitionService
+    private FTPManager mFTPManager;
 
     /**
      * Service connection listener for {@link SpeechRecognitionService}.
@@ -52,6 +54,9 @@ public class LaunchActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //Initialize TTS so the tts responses don't take too much time.
+        TTS.speak(this, "I am ready.");
+
         //Set all the volume at maximum
         Utils.setMaxVolume(this);
 
@@ -64,6 +69,11 @@ public class LaunchActivity extends AppCompatActivity {
 
         //register for hourly reminder
         TimeReminderReceiver.registerReceiver(this);
+
+//        //start ftp server
+//        mFTPManager = new FTPManager(this);
+//        mFTPManager.startServer(this);
+//        Log.d(TAG, "onCreate: FTP server started. IP address: " + mFTPManager.getLocalIpAddress(this) + ":2222");
     }
 
     @Override
@@ -86,6 +96,8 @@ public class LaunchActivity extends AppCompatActivity {
             unbindService(mSpeechRecognitionServiceConnection);
             isBound = false;
         }
+
+//        mFTPManager.stopServer();
     }
 
     /**

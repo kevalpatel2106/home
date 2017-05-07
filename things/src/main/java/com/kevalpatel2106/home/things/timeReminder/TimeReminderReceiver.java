@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 
+import com.kevalpatel2106.home.utils.cons.Constants;
 import com.kevalpatel2106.home.utils.tts.TTS;
 
 import java.util.Calendar;
@@ -60,10 +61,12 @@ public class TimeReminderReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "onReceive: Time reminder receiver.");
 
-        //Speak
-        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-        calendar.setTimeZone(TimeZone.getTimeZone("Asia/Calcutta"));
-        TTS.speak(context, "It\'s " + calendar.get(Calendar.HOUR) + " o clock");
+        if (TTS.isIintilized()) {
+            //Speak
+            Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+            calendar.setTimeZone(TimeZone.getTimeZone(Constants.TIME_ZONE));
+            TTS.speak(context, "It\'s " + calendar.get(Calendar.HOUR) + " o clock");
+        }
 
         //Register next alarm
         registerReceiver(context);

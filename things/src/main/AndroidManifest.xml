@@ -41,7 +41,7 @@
             android:exported="false"/>
 
         <service
-            android:name=".SpeechRecognitionService"
+            android:name=".speechToText.SpeechRecognitionService"
             android:exported="false"/>
 
         <!--Firebase messaging service-->

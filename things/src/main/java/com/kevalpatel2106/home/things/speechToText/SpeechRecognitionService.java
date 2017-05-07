@@ -1,4 +1,4 @@
-package com.kevalpatel2106.home.things;
+package com.kevalpatel2106.home.things.speechToText;
 
 import android.app.Service;
 import android.content.Intent;
