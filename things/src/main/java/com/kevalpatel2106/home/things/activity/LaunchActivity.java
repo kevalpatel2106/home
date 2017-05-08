@@ -67,10 +67,9 @@ public class LaunchActivity extends AppCompatActivity {
         //register for hourly reminder
         TimeReminderReceiver.registerReceiver(this);
 
-//        //start ftp server
-//        mFTPManager = new FTPManager(this);
-//        mFTPManager.startServer(this);
-//        Log.d(TAG, "onCreate: FTP server started. IP address: " + mFTPManager.getLocalIpAddress(this) + ":2222");
+        //start ftp server
+        mFTPManager = new FTPManager(this);
+        mFTPManager.startServer();
     }
 
     @Override
@@ -94,7 +93,7 @@ public class LaunchActivity extends AppCompatActivity {
             isBound = false;
         }
 
-//        mFTPManager.stopServer();
+        mFTPManager.stopServer();
     }
 
     /**
