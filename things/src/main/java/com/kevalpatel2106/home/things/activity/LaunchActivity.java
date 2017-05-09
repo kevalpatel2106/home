@@ -69,7 +69,7 @@ public class LaunchActivity extends AppCompatActivity {
 
         //start ftp server
         mFTPManager = new FTPManager(this);
-        mFTPManager.startServer();
+        mFTPManager.startServer(this);
     }
 
     @Override

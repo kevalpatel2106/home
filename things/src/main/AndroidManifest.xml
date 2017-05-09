@@ -20,7 +20,9 @@
 
         <uses-library android:name="com.google.android.things"/>
 
-        <activity android:name="com.kevalpatel2106.home.things.activity.LaunchActivity">
+        <activity
+            android:hardwareAccelerated="false"
+            android:name="com.kevalpatel2106.home.things.activity.LaunchActivity">
             <!-- Launch activity as default from Android Studio -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

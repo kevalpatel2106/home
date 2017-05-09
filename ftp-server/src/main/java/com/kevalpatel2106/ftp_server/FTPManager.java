@@ -1,8 +1,11 @@
 package com.kevalpatel2106.ftp_server;
 
 import android.content.Context;
-import android.os.Environment;
 import android.util.Log;
+
+import com.stericson.RootShell.exceptions.RootDeniedException;
+import com.stericson.RootShell.execution.Command;
+import com.stericson.RootTools.RootTools;
 
 import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.FtpServerFactory;
@@ -10,14 +13,18 @@ import org.apache.ftpserver.ftplet.FtpException;
 import org.apache.ftpserver.listener.ListenerFactory;
 import org.apache.ftpserver.usermanager.PropertiesUserManagerFactory;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by Keval Patel on 06/05/17.
@@ -30,7 +37,6 @@ public class FTPManager {
     private static final String TAG = FTPManager.class.getSimpleName();
 
     private FtpServer mFtpServer;
-    private String ftpConfigDir = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ftpConfig/";
 
     /**
      * Initialize the FTP server
@@ -39,19 +45,19 @@ public class FTPManager {
      * @see 'http://stackoverflow.com/a/42474815/4690731'
      */
     public FTPManager(Context context) {
-//        try {
-//            mountDrive();
-//        } catch (IOException | InterruptedException e) {
-//            e.printStackTrace();
-//            return;
-//        }
-
-        File f = new File(ftpConfigDir);
-        if (!f.exists()) f.mkdir();
+        try {
+            mountDrive();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        } catch (RootDeniedException | TimeoutException e) {
+            e.printStackTrace();
+            return;
+        }
 
         //Copy the resources.
-        copyResourceFile(context, R.raw.users, ftpConfigDir + "users.properties");
-        copyResourceFile(context, R.raw.ftpserver, ftpConfigDir + "ftpserver.jks");
+        copyResourceFile(context, R.raw.users, context.getExternalCacheDir().getAbsolutePath() + "/users.properties");
+        copyResourceFile(context, R.raw.ftpserver, context.getExternalCacheDir().getAbsolutePath() + "/ftpserver.jks");
     }
 
 
@@ -113,10 +119,10 @@ public class FTPManager {
     /**
      * Start the FTP server.
      */
-    public void startServer() {
+    public void startServer(Context context) {
         //Set the user factory
         PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
-        String filename = ftpConfigDir + "users.properties";
+        String filename = context.getExternalCacheDir().getAbsolutePath() + "/users.properties";
         File files = new File(filename);
         userManagerFactory.setFile(files);
 
@@ -156,10 +162,38 @@ public class FTPManager {
         }
     }
 
-    private void mountDrive() throws IOException, InterruptedException {
-        Process p = Runtime.getRuntime().exec("su -c \"mkdir /mnt/usb\"");
-        p.waitFor();
-        p = Runtime.getRuntime().exec("su -c \"mount -t vfat -o rw /dev/block/sda1 /mnt/usb\"");
-        p.waitFor();
+    private void mountDrive() throws IOException, TimeoutException, RootDeniedException {
+        RootTools.debugMode = true; //ON
+        RootTools.log("Starting mount process...");
+
+        if (RootTools.isRootAvailable()) {
+            if (RootTools.isAccessGiven()) {
+
+                Command command = new Command(0, "whoami",
+                        "mkdir /mnt/usb",
+                        "mount -t vfat -o rw /dev/block/sda1 /mnt/usb\n") {
+                    @Override
+                    public void commandOutput(int id, String line) {
+                        super.commandOutput(id, line);
+                        RootTools.log(line);
+                    }
+
+                    @Override
+                    public void commandTerminated(int id, String reason) {
+                        super.commandTerminated(id, reason);
+                    }
+
+                    @Override
+                    public void commandCompleted(int id, int exitcode) {
+                        super.commandCompleted(id, exitcode);
+                    }
+                };
+                RootTools.getShell(true).add(command);
+            }else {
+                RootTools.log("This application is not having root access...");
+            }
+        } else {
+            RootTools.log("Root access not available...");
+        }
     }
 }
