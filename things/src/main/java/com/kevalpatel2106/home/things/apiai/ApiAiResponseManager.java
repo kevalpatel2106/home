@@ -2,6 +2,7 @@ package com.kevalpatel2106.home.things.apiai;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.gson.JsonElement;
 import com.kevalpatel2106.home.things.bluetooth.BluetoothA2DPService;
@@ -11,6 +12,7 @@ import com.kevalpatel2106.home.utils.cons.Constants;
 import com.kevalpatel2106.home.utils.tts.TTS;
 
 import java.util.Calendar;
+import java.util.Map;
 import java.util.TimeZone;
 
 import ai.api.model.AIResponse;
@@ -46,17 +48,17 @@ class ApiAiResponseManager {
         final Result result = aiResponse.getResult();
         String speech = result.getFulfillment().getSpeech();
 
-//        // Get parameters
-//        String parameterString = "";
-//        if (result.getParameters() != null && !result.getParameters().isEmpty()) {
-//            for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
-//                parameterString += "(" + entry.getKey() + ", " + entry.getValue() + ") ";
-//            }
-//        }
-//
-//        Log.d("Query:", result.getFulfillment().getSpeech()
-//                + "\nAction: " + result.getAction()
-//                + "\nParameters: " + parameterString);
+        // Get parameters
+        String parameterString = "";
+        if (result.getParameters() != null && !result.getParameters().isEmpty()) {
+            for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+                parameterString += "(" + entry.getKey() + ", " + entry.getValue() + ") ";
+            }
+        }
+
+        Log.d("Query:", result.getFulfillment().getSpeech()
+                + "\nAction: " + result.getAction()
+                + "\nParameters: " + parameterString);
 
         switch (result.getAction()) {
             case INTENT_BT_ON:

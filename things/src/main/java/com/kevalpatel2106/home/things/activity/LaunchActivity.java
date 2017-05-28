@@ -15,7 +15,6 @@ import com.kevalpatel2106.ftp_server.FTPManager;
 import com.kevalpatel2106.home.things.bluetooth.BluetoothA2DPService;
 import com.kevalpatel2106.home.things.speechToText.SpeechRecognitionService;
 import com.kevalpatel2106.home.things.timeReminder.TimeReminderReceiver;
-import com.kevalpatel2106.home.utils.Utils;
 import com.kevalpatel2106.home.utils.cons.DeviceType;
 import com.kevalpatel2106.home.utils.managers.DeviceSessionManager;
 import com.kevalpatel2106.home.utils.tts.TTS;
@@ -75,13 +74,9 @@ public class LaunchActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (Utils.isMicConnected(this)) {
-            // Bind to SpeechRecognitionService
-            Intent intent = new Intent(this, SpeechRecognitionService.class);
-            bindService(intent, mSpeechRecognitionServiceConnection, Context.BIND_AUTO_CREATE);
-        } else {
-            Log.d(TAG, "onStart: Mic not connected.");
-        }
+        // Bind to SpeechRecognitionService
+        Intent intent = new Intent(this, SpeechRecognitionService.class);
+        bindService(intent, mSpeechRecognitionServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override

@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
     <application
         android:name=".MyApplication"
@@ -21,8 +22,8 @@
         <uses-library android:name="com.google.android.things"/>
 
         <activity
-            android:hardwareAccelerated="false"
-            android:name="com.kevalpatel2106.home.things.activity.LaunchActivity">
+            android:name="com.kevalpatel2106.home.things.activity.LaunchActivity"
+            android:hardwareAccelerated="false">
             <!-- Launch activity as default from Android Studio -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
