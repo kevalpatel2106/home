@@ -5,7 +5,7 @@ apply from: '../misc/dependencies.gradle'
 android {
     signingConfigs {
         playStore {
-            if (System.getenv("IS_CI_BUILD").equals("true")) {
+            if (System.getenv("IS_CI_BUILD") == "true") {
                 //It is CI build, load it from the environment variables.
                 //See circle.yml file.
                 storeFile file(System.getenv("KEY_STORE"))
@@ -144,7 +144,6 @@ dependencies {
     //firebase
     compile firebaseLib.fcm
     compile firebaseLib.core
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }
 apply plugin: 'com.google.gms.google-services'
 

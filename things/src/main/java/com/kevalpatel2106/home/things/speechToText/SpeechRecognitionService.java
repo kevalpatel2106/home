@@ -48,6 +48,7 @@ public class SpeechRecognitionService extends Service implements PocketSphinxLis
 
     @Override
     public void onTextRecognized(String recognizedText) {
+        if (recognizedText.contains(PocketSphinx.ACTIVATION_KEYPHRASE)) return;
         mApiAiManager.send(recognizedText);
         pocketSphinx.startListeningToActivationPhrase();
     }
